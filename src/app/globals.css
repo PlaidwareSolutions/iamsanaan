@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Fonts */
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-inter-tight), system-ui, sans-serif;
+  --font-mono: var(--font-jbm), ui-monospace, monospace;
+
+  /* Brand palette — "Editorial Terminal" */
+  --color-ink: #0c0c0d;
+  --color-ink-2: #141416;
+  --color-ink-3: #1b1b1e;
+  --color-bone: #edeae1;
+  --color-paper: #f3f1ea;
+  --color-paper-2: #fbfaf6;
+  --color-accent: #ff4d00;
+
+  /* Tone-aware roles — resolved per section via .tone-ink / .tone-paper */
+  --color-tone: var(--tone-bg);
+  --color-tone-2: var(--tone-bg2);
+  --color-fg: var(--tone-fg);
+  --color-mute: var(--tone-mute);
+  --color-line: var(--tone-line);
+  --color-line-strong: var(--tone-line-strong);
+
+  /* Motion */
+  --ease-swift: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---------- Tones ---------- */
+
+.tone-ink {
+  --tone-bg: #0c0c0d;
+  --tone-bg2: #141416;
+  --tone-fg: #edeae1;
+  --tone-mute: #a3a29b;
+  --tone-line: rgb(237 234 225 / 0.14);
+  --tone-line-strong: rgb(237 234 225 / 0.32);
+  background-color: var(--tone-bg);
+  color: var(--tone-fg);
+}
+
+.tone-paper {
+  --tone-bg: #f3f1ea;
+  --tone-bg2: #fbfaf6;
+  --tone-fg: #1a1a1c;
+  --tone-mute: #625f56;
+  --tone-line: rgb(26 26 28 / 0.14);
+  --tone-line-strong: rgb(26 26 28 / 0.34);
+  background-color: var(--tone-bg);
+  color: var(--tone-fg);
+}
+
+/* ---------- Base ---------- */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-ink);
+  color: var(--color-bone);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: #ff4d00;
+  color: #0c0c0d;
+}
+
+:focus-visible {
+  outline: 2px solid #ff4d00;
+  outline-offset: 3px;
+}
+
+.font-display {
+  font-optical-sizing: auto;
+  letter-spacing: -0.015em;
+}
+
+/* Balanced display headlines */
+.headline {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+/* ---------- Utilities ---------- */
+
+/* Underline that draws in on hover */
+.u-link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 calc(100% - 1px);
+  background-repeat: no-repeat;
+  transition: background-size 0.45s var(--ease-swift);
+}
+.u-link:hover,
+.u-link:focus-visible {
+  background-size: 100% 1px;
+}
+
+/* Logo marquee */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 42s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Hide scrollbars on horizontal scrollers while keeping scrollability */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
