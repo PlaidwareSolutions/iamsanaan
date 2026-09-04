@@ -10,8 +10,8 @@ export const site = {
   description:
     "Sanaan is a digital product and growth studio. We design and build web platforms, mobile apps, and the growth engines behind them — for companies that can't afford a miss.",
   url: "https://iamsanaan.com",
-  email: "studio@iamsanaan.com",
-  phone: "+1 (713) 555-0164",
+  email: "sanaan7788@gmail.com",
+  phone: "+1 (346) 244-0364",
   address: "2200 Post Oak Blvd, Suite 410, Houston, TX",
   founded: 2017,
   anchors: {
