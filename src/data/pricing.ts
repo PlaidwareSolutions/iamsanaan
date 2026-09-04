@@ -12,7 +12,7 @@ export const engagementModels: EngagementModel[] = [
   {
     slug: "fixed-scope",
     name: "Fixed-scope project",
-    anchor: "from $15,000",
+    anchor: "from $99",
     anchorNote: "priced after a 2-week discovery",
     summary:
       "A defined product, a fixed price, a committed timeline. Discovery sets the scope; the quote doesn't move unless the scope does — and scope changes are priced in writing before we build them.",
@@ -26,8 +26,8 @@ export const engagementModels: EngagementModel[] = [
   {
     slug: "embedded-team",
     name: "Embedded team",
-    anchor: "from $18,000/mo",
-    anchorNote: "2+ senior people, monthly",
+    anchor: "from $2,000/mo",
+    anchorNote: "dedicated senior capacity, monthly",
     summary:
       "A senior designer-engineer pod that joins your standups, your Slack, and your roadmap. You direct priorities sprint by sprint; we bring the product discipline. The team you meet is the team that ships.",
     bestWhen: [
@@ -40,7 +40,7 @@ export const engagementModels: EngagementModel[] = [
   {
     slug: "growth-retainer",
     name: "Growth retainer",
-    anchor: "from $4,500/mo",
+    anchor: "from $99/mo",
     anchorNote: "SEO, paid, and CRO as one system",
     summary:
       "Continuous acquisition work measured against one scoreboard: qualified pipeline. Weekly experiment cycles, monthly strategy reviews, and a live dashboard tying spend to revenue.",
@@ -75,8 +75,8 @@ export const tierRows = [
 export const growthTiers: Tier[] = [
   {
     name: "Foundation",
-    monthly: 4500,
-    quarterlyMonthly: 4050,
+    monthly: 99,
+    quarterlyMonthly: 89,
     blurb: "Owned-channel groundwork for teams starting to take search seriously.",
     features: {
       "Technical SEO & site health": "Full audit + monthly fixes",
@@ -89,14 +89,14 @@ export const growthTiers: Tier[] = [
   },
   {
     name: "Traction",
-    monthly: 8000,
-    quarterlyMonthly: 7200,
+    monthly: 499,
+    quarterlyMonthly: 449,
     blurb: "The full acquisition system for companies ready to compound.",
     highlight: true,
     features: {
       "Technical SEO & site health": "Continuous",
       "Content production": "4 pieces / month",
-      "Paid media management": "Up to $25k/mo spend",
+      "Paid media management": "Up to $5k/mo spend",
       "CRO experiments": "2 tests / month",
       Reporting: "Live dashboard + monthly memo",
       "Strategy reviews": "Bi-weekly",
@@ -104,8 +104,8 @@ export const growthTiers: Tier[] = [
   },
   {
     name: "Scale",
-    monthly: 14000,
-    quarterlyMonthly: 12600,
+    monthly: 999,
+    quarterlyMonthly: 899,
     blurb: "A dedicated growth pod operating like an in-house team.",
     features: {
       "Technical SEO & site health": "Continuous",
@@ -120,6 +120,6 @@ export const growthTiers: Tier[] = [
 
 export const notAFit = [
   "You need it in two weeks. Good work has a floor; ours is measured in weeks of thinking, not days of production.",
-  "Your budget is under $15,000. We'll point you to trusted smaller shops rather than do thin work with our name on it.",
+  "Your budget is under $99. At that level a free site builder is honestly the right call — and we'll say so rather than take the money.",
   "You want an execution arm with no questions asked. We push back — that's most of what you're paying for.",
 ];

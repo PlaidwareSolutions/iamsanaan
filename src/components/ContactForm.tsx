@@ -14,11 +14,11 @@ const projectTypes = [
 ];
 
 const budgets = [
-  { value: "under-15", label: "Under $15k" },
-  { value: "15-40", label: "$15k – $40k" },
-  { value: "40-90", label: "$40k – $90k" },
-  { value: "90-150", label: "$90k – $150k" },
-  { value: "150-plus", label: "$150k+" },
+  { value: "under-99", label: "Under $99" },
+  { value: "99-500", label: "$99 – $500" },
+  { value: "500-2000", label: "$500 – $2,000" },
+  { value: "2000-10000", label: "$2,000 – $10,000" },
+  { value: "over-10000", label: "$10,000+" },
 ];
 
 const timelines = [
@@ -244,7 +244,7 @@ export function ContactForm() {
                 </label>
               ))}
             </div>
-            {data.budget === "under-15" && (
+            {data.budget === "under-99" && (
               <div className="mt-6 border-l-2 border-accent bg-tone-2 p-5" role="status">
                 <p className="text-sm leading-relaxed">
                   <span className="font-medium">Honest note:</span>{" "}

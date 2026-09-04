@@ -124,15 +124,15 @@ export default function AboutPage() {
           ))}
         </div>
 
-        {/* From the lab — small, honest R&D note */}
+        {/* Our own products — the real suite, not lab experiments */}
         <div className="mt-16 grid gap-8 border-t border-line pt-10 md:grid-cols-12 md:items-center">
           <div className="md:col-span-8">
-            <MonoLabel className="text-accent">From the lab</MonoLabel>
+            <MonoLabel className="text-accent">Our own products</MonoLabel>
             <p className="mt-3 max-w-[62ch] leading-relaxed text-mute">
-              Fridays are for the work nobody commissioned: an open-source sync engine for
-              offline-first field apps, an internal LLM harness for auditing tracking plans, and an
-              annual teardown of the year&apos;s best product onboarding. The experiments keep us
-              sharp; clients get them free.
+              Between client work, we build for ourselves: Buildorata, Fixorata, Drivorata,
+              Rentorata, and PropOrata — five vertical SaaS products operated in-house on our
+              Plaidware platform. Running software we have to answer for every month is the
+              discipline your project inherits.
             </p>
           </div>
           <div className="md:col-span-3 md:col-start-10 md:justify-self-end">

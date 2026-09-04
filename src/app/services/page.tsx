@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/Button";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Web platforms, mobile apps, and growth engineering — three disciplines, one standard. Engagements from $15,000.",
+    "Web platforms, mobile apps, and growth engineering — three disciplines, one standard. Engagements from $99.",
 };
 
 const groups = [
@@ -100,12 +100,12 @@ export default function ServicesPage() {
                   </h2>
                   <p className="mt-4 max-w-[46ch] leading-relaxed text-mute">
                     Foundation, Traction, and Scale — defined deliverables per tier, monthly or
-                    quarterly billing, and terms designed to be easy to leave. From $4,500/mo.
+                    quarterly billing, and terms designed to be easy to leave. From $99/mo.
                   </p>
                   <ul className="mt-8 space-y-3 border-t border-line pt-6 text-[15px] text-mute">
-                    <li>Foundation — <span className="text-fg">$4,500/mo</span> · owned-channel groundwork</li>
-                    <li>Traction — <span className="text-fg">$8,000/mo</span> · the full acquisition system</li>
-                    <li>Scale — <span className="text-fg">$14,000/mo</span> · a dedicated growth pod</li>
+                    <li>Foundation — <span className="text-fg">$99/mo</span> · owned-channel groundwork</li>
+                    <li>Traction — <span className="text-fg">$499/mo</span> · the full acquisition system</li>
+                    <li>Scale — <span className="text-fg">$999/mo</span> · a dedicated growth pod</li>
                   </ul>
                   <div className="mt-auto pt-8">
                     <Button href="/pricing" variant="ghost">

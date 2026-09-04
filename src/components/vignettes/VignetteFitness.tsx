@@ -32,7 +32,7 @@ export function VignetteFitness({ className }: { className?: string }) {
             ))}
           </div>
           <p className="mt-[1em] rounded-[0.4em] bg-[#ff4d00]/12 px-[0.8em] py-[0.55em] font-mono text-[0.62em] leading-relaxed text-[#ff8a5c]">
-            Shared 2,140 times this week
+            Shared 210 times this week
           </p>
         </div>
 
@@ -130,8 +130,8 @@ export function VignetteFitness({ className }: { className?: string }) {
         {/* Store stats */}
         <div className="flex w-[22%] translate-y-[1.5em] flex-col gap-[1em]">
           {[
-            { big: "4.8★", small: "App Store · 3,100 reviews" },
-            { big: "124k", small: "downloads in 6 months" },
+            { big: "4.8★", small: "App Store · 310 reviews" },
+            { big: "12k", small: "downloads in 6 months" },
             { big: "<20s", small: "to log a session", accent: true },
           ].map((stat) => (
             <div

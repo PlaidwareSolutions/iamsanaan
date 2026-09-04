@@ -58,13 +58,13 @@ export const services: Service[] = [
     ],
     engagementFit: {
       model: "Usually fixed-scope",
-      anchor: "from $25,000",
-      note: "Typical marketing site: 8–12 weeks. Web applications: scoped after discovery.",
+      anchor: "from $99",
+      note: "Typical marketing site: 2–4 weeks. Web applications: scoped after discovery.",
     },
     caseStudySlugs: ["veyra-freight", "ember-and-oak"],
     faqIds: ["ownership", "stack", "timeline"],
     metaDescription:
-      "Marketing sites, web applications, and e-commerce platforms engineered for speed and conversion. Fixed-scope builds from $25,000.",
+      "Marketing sites, web applications, and e-commerce platforms engineered for speed and conversion. Fixed-scope builds from $99.",
   },
   {
     slug: "mobile",
@@ -103,13 +103,13 @@ export const services: Service[] = [
     ],
     engagementFit: {
       model: "Fixed-scope or embedded team",
-      anchor: "from $40,000",
-      note: "MVP to store in 12–16 weeks. Ongoing releases via embedded team.",
+      anchor: "from $2,500",
+      note: "MVP to store in 6–12 weeks. Ongoing releases via embedded team.",
     },
     caseStudySlugs: ["pulseline"],
     faqIds: ["ownership", "team", "support"],
     metaDescription:
-      "Native iOS, Android, and cross-platform apps with retention engineered in. MVP to app store in 12–16 weeks, from $40,000.",
+      "Native iOS, Android, and cross-platform apps with retention engineered in. MVP to app store in 6–12 weeks, from $2,500.",
   },
   {
     slug: "growth",
@@ -148,13 +148,13 @@ export const services: Service[] = [
     ],
     engagementFit: {
       model: "Monthly retainer",
-      anchor: "from $4,500/mo",
+      anchor: "from $99/mo",
       note: "Three-month initial term, month-to-month after. No long lock-ins.",
     },
     caseStudySlugs: ["ember-and-oak"],
     faqIds: ["retainer-lock", "reporting", "budget"],
     metaDescription:
-      "Technical SEO, paid acquisition, and conversion optimization run as one system, measured in qualified pipeline. Retainers from $4,500/mo.",
+      "Technical SEO, paid acquisition, and conversion optimization run as one system, measured in qualified pipeline. Retainers from $99/mo.",
   },
 ];
 

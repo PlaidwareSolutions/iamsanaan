@@ -50,3 +50,39 @@ Working notes for the autonomous build. The competitive research this build inte
   horizontal-overflow + console-error checks. Interactive audit covers form flow + validation,
   pricing toggle, slider keyboard/drag, stack tabs, nav tab order.
 - Dev/prod server for QA runs on port **3105** (3000 is occupied by another local app).
+
+## Repricing (2026-09-03, user direction)
+
+- All financial anchors rescaled: projects from $500 (was $15,000), growth retainers
+  $199/$499/$999 (was $4,500/$8,000/$14,000), embedded team from $2,000/mo, support from
+  $99/mo. Contact-form budget bands per user spec: <$99 / $500–$2,000 / $2,000–$10,000 / $10,000+.
+- Timeline mentions that sat beside prices scaled with them (marketing site 2–4 wks, MVP 6–12 wks).
+
+## Pricing coherence pass (2026-09-03, follow-up)
+
+- Contact form now has five contiguous bands: <$99 / $99–$500 / $500–$2,000 /
+  $2,000–$10,000 / $10,000+; the honest-note ($500 floor) shows for both sub-$500 bands.
+- Fictional client-outcome metrics rescaled to match small-business positioning:
+  Veyra $4M operation, 90 loads/wk, $180k savings; Pulseline 12k downloads, $9k MRR,
+  310 reviews; trust line now "$6M+ in tracked revenue". Ember & Oak metrics were
+  already relative (percentages/seconds). Vignette numerals updated to match.
+
+## Floor moved to $99 (2026-09-03, user direction)
+
+- Published minimum is now $99 across every anchor: projects from $99, growth retainers
+  from $99/mo (Foundation tier $99/$89-quarterly), support from $49/mo. Pricing hero reads
+  "Every engagement starts at $99." Honest-note in the form now triggers only for the
+  "Under $99" band. Embedded team ($2,000/mo) and mobile MVP ($2,500) floors kept — they
+  describe bigger engagement shapes, not the studio entry price.
+
+## Real product portfolio integrated (2026-09-03)
+
+- The user's actual products (from plaidware.com) are now first-class content: new `/products`
+  page + homepage section "We eat our own cooking." Data in `src/data/products.ts` — five
+  vertical SaaS products (Buildorata, Fixorata, Drivorata, Rentorata, PropOrata) with real
+  taglines and real pricing quoted from the live catalog, linking out to plaidware.com.
+- Trust marquee now shows the real product wordmarks (fictional client marks removed from it);
+  its caption states the suite is built/operated in-house. About-page "lab" note rewritten to
+  reference the real suite. Nav + footer link to /products.
+- The three case studies (Veyra/Pulseline/Ember & Oak) remain as fictional demonstration
+  work samples — swap with real client stories when available.

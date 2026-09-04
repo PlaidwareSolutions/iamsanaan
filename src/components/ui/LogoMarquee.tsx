@@ -7,7 +7,7 @@ export function LogoMarquee({ className }: { className?: string }) {
     <div
       className={cn("marquee relative overflow-hidden", className)}
       role="img"
-      aria-label={`Selected clients: ${clients.map((c) => c.name).join(", ")}`}
+      aria-label={`Products we build and operate: ${clients.map((c) => c.name).join(", ")}`}
     >
       <div className="marquee-track flex w-max items-center">
         {[0, 1].map((dup) => (

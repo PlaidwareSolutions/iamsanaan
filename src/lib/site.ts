@@ -15,8 +15,8 @@ export const site = {
   address: "2200 Post Oak Blvd, Suite 410, Houston, TX",
   founded: 2017,
   anchors: {
-    projectMinimum: "$15,000",
-    retainerMinimum: "$4,500/mo",
+    projectMinimum: "$99",
+    retainerMinimum: "$99/mo",
     responseTime: "one business day",
   },
   socials: [

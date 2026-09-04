@@ -106,7 +106,7 @@ export default function ProcessPage() {
               &ldquo;support tier&rdquo; of strangers.
             </p>
             <p className="mt-6 font-mono text-[12px] text-mute">
-              Support retainers from $1,500/mo · included in all growth retainers
+              Support retainers from $49/mo · included in all growth retainers
             </p>
           </div>
           <div className="lg:col-span-6 lg:col-start-7">

@@ -7,6 +7,7 @@ import { MonoLabel } from "./ui/MonoLabel";
 import { FooterCta } from "./FooterCta";
 
 const companyLinks = [
+  { label: "Products", href: "/products" },
   { label: "About", href: "/about" },
   { label: "Process", href: "/process" },
   { label: "Pricing", href: "/pricing" },

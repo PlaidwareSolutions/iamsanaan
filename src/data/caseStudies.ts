@@ -43,11 +43,11 @@ export const caseStudies: CaseStudy[] = [
     headline: "An operations platform that gave a freight broker its week back.",
     featuredMetric: { value: "−78%", label: "manual reporting time", countTo: 78, prefix: "−", suffix: "%" },
     summary:
-      "Veyra's dispatch team ran a $40M freight operation on spreadsheets and a legacy TMS. We built the web platform that replaced both.",
+      "Veyra's dispatch team ran a $4M freight operation on spreadsheets and a legacy TMS. We built the web platform that replaced both.",
     context:
-      "Veyra Freight is a mid-market freight brokerage moving roughly 900 loads a week across the Gulf Coast. Their dispatchers juggled a decade-old transportation management system, four shared spreadsheets, and a quoting process that lived in one senior employee's head.",
+      "Veyra Freight is a family-run freight brokerage moving roughly 90 loads a week across the Gulf Coast. Their dispatchers juggled a decade-old transportation management system, four shared spreadsheets, and a quoting process that lived in one senior employee's head.",
     problem:
-      "Quotes took hours, not minutes — and every Friday, two full-time staff assembled operational reports by hand. Leadership had no live view of margin per lane, and the fragility of the process was starting to cost contracts with enterprise shippers who expected API integrations and same-hour quotes.",
+      "Quotes took hours, not minutes — and every Friday, two full-time staff assembled operational reports by hand. Leadership had no live view of margin per lane, and the fragility of the process was starting to cost contracts with larger shippers who expected API integrations and same-hour quotes.",
     approach: [
       {
         title: "Two weeks riding along with dispatch",
@@ -59,7 +59,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         title: "Reports that write themselves",
-        body: "Every action in the platform emits a typed event. The Friday reporting ritual became a live dashboard: margin per lane, carrier scorecards, and exception queues, exportable for the enterprise clients who still want a PDF.",
+        body: "Every action in the platform emits a typed event. The Friday reporting ritual became a live dashboard: margin per lane, carrier scorecards, and exception queues, exportable for the clients who still want a PDF.",
       },
     ],
     stack: ["Next.js", "TypeScript", "PostgreSQL", "Node.js", "AWS", "Tailwind CSS"],
@@ -76,8 +76,8 @@ export const caseStudies: CaseStudy[] = [
     metrics: [
       { value: "−78%", label: "time spent on manual reporting", countTo: 78, prefix: "−", suffix: "%" },
       { value: "11 min", label: "median quote turnaround, down from 3.5 hours", countTo: 11, suffix: " min" },
-      { value: "$2.1M", label: "annualized operational savings", countTo: 2.1, prefix: "$", suffix: "M", decimals: 1 },
-      { value: "2", label: "enterprise contracts won on integration capability", countTo: 2 },
+      { value: "$180k", label: "annualized operational savings", countTo: 180, prefix: "$", suffix: "k" },
+      { value: "2", label: "regional contracts won on integration capability", countTo: 2 },
     ],
     quote: {
       text: "They didn't ship a website, they shipped our operating system. The Friday report meeting doesn't exist anymore — the dashboard is the meeting.",
@@ -128,10 +128,10 @@ export const caseStudies: CaseStudy[] = [
       },
     ],
     metrics: [
-      { value: "124k", label: "downloads in first six months", countTo: 124, suffix: "k" },
+      { value: "12k", label: "downloads in first six months", countTo: 12, suffix: "k" },
       { value: "41%", label: "day-30 retention (category avg. ~9%)", countTo: 41, suffix: "%" },
-      { value: "4.8★", label: "App Store rating across 3,100 reviews", countTo: 4.8, suffix: "★", decimals: 1 },
-      { value: "$96k", label: "monthly recurring revenue at month six", countTo: 96, prefix: "$", suffix: "k" },
+      { value: "4.8★", label: "App Store rating across 310 reviews", countTo: 4.8, suffix: "★", decimals: 1 },
+      { value: "$9k", label: "monthly recurring revenue at month six", countTo: 9, prefix: "$", suffix: "k" },
     ],
     quote: {
       text: "I was terrified an app would flatten what makes my coaching work. Instead they built the noticing into the product. My retention numbers embarrass the category.",

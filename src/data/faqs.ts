@@ -22,13 +22,13 @@ export const faqs: Faq[] = [
     id: "budget",
     question: "What does this actually cost?",
     answer:
-      "Projects start at $15,000 and growth retainers at $4,500/month — we publish this because vague pricing wastes everyone's time. Most web platforms land between $25k–$90k and mobile apps between $40k–$150k. Discovery produces a fixed quote before you commit to a build.",
+      "Projects start at $99 and growth retainers at $99/month — we publish this because vague pricing wastes everyone's time. Most marketing sites land between $99–$2,000, and web platforms and mobile apps between $2,000–$10,000. Discovery produces a fixed quote before you commit to a build.",
   },
   {
     id: "timeline",
     question: "How long will it take, really?",
     answer:
-      "Typical marketing sites ship in 8–12 weeks, platforms and apps in 12–16. We commit to dates at the end of discovery and we've missed two launch dates since 2017 — both moved by the client. You'll see a staging build every week, so you never have to take our word for progress.",
+      "Typical marketing sites ship in 2–4 weeks, platforms and apps in 6–12. We commit to dates at the end of discovery and we've missed two launch dates since 2017 — both moved by the client. You'll see a staging build every week, so you never have to take our word for progress.",
   },
   {
     id: "overrun",
@@ -62,7 +62,7 @@ export const faqs: Faq[] = [
   },
   {
     id: "small-budget",
-    question: "We're not at $15k yet. Should we still talk?",
+    question: "We're not at $99 yet. Should we still talk?",
     answer:
       "Probably not yet — and we'd rather say that here than after a discovery call. When budget is the constraint, a strong template well-executed beats a thin custom build. Come back when the business is ready; we'll still be here.",
   },

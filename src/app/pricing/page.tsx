@@ -14,14 +14,14 @@ import { PricingMatrix } from "@/components/sections/PricingMatrix";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Published minimums, three engagement models, and transparent growth retainer tiers. Projects from $15,000; retainers from $4,500/mo.",
+    "Published minimums, three engagement models, and transparent growth retainer tiers. Projects from $99; retainers from $99/mo.",
 };
 
 const typicals = [
-  { label: "Marketing site", range: "$25k – $60k", note: "8–12 weeks" },
-  { label: "Web application", range: "$50k – $150k", note: "12–20 weeks" },
-  { label: "Mobile app MVP", range: "$40k – $150k", note: "12–16 weeks" },
-  { label: "Growth retainer", range: "$4.5k – $14k /mo", note: "3-month initial term" },
+  { label: "Marketing site", range: "$99 – $2,000", note: "1–4 weeks" },
+  { label: "Web application", range: "$2,000 – $10,000", note: "4–10 weeks" },
+  { label: "Mobile app MVP", range: "$2,500 – $10,000+", note: "6–12 weeks" },
+  { label: "Growth retainer", range: "$99 – $999 /mo", note: "3-month initial term" },
 ];
 
 export default function PricingPage() {
@@ -31,8 +31,7 @@ export default function PricingPage() {
         eyebrow="Pricing"
         title={
           <>
-            Projects start at <span className="text-accent">$15,000</span>. Retainers at{" "}
-            <span className="text-accent">$4,500</span> a month.
+            Every engagement starts at <span className="text-accent">$99</span>.
           </>
         }
         intro="We publish this because vague pricing wastes your time and ours. If those numbers work, everything below explains exactly what they buy. If they don't — no hard feelings, and this page just saved you a discovery call."

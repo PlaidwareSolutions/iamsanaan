@@ -10,7 +10,7 @@ import { ContactForm } from "@/components/ContactForm";
 export const metadata: Metadata = {
   title: "Start a project",
   description:
-    "Four questions, two minutes, and a reply from a principal within one business day. Engagements from $15,000.",
+    "Four questions, two minutes, and a reply from a principal within one business day. Engagements from $99.",
 };
 
 export default function ContactPage() {

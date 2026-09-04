@@ -48,7 +48,7 @@ export function VignetteOps({ className }: { className?: string }) {
             <div className="grid grid-cols-3 gap-[1.2em]">
               {[
                 { label: "MARGIN / LANE", value: "18.4%", delta: "+2.1", up: true },
-                { label: "LOADS THIS WEEK", value: "912", delta: "+38", up: true },
+                { label: "LOADS THIS WEEK", value: "91", delta: "+8", up: true },
                 { label: "QUOTE TURNAROUND", value: "11 min", delta: "−3.1h", up: true },
               ].map((kpi) => (
                 <div key={kpi.label} className="border border-[#232327] bg-[#141417] p-[1.2em]">
