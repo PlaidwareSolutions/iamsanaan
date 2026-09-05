@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { stackCategories } from "@/data/stack";
-import { caseStudies } from "@/data/caseStudies";
 import { cn } from "@/lib/utils";
 
 /**
- * Interactive capability proof: pick a category, and every technology row
- * names the shipped work it appears in — authority without paragraphs.
+ * Interactive capability grid: pick a category, and every technology row
+ * says why it earned its place in the stack — authority without paragraphs.
  */
 export function TechStackGrid() {
   const [active, setActive] = useState(stackCategories[0].id);
@@ -44,39 +42,17 @@ export function TechStackGrid() {
       {/* Tech rows */}
       <div className="lg:col-span-9">
         <ul className="border-t border-line">
-          {category.items.map((tech) => {
-            const linked = tech.caseStudySlugs
-              .map((slug) => caseStudies.find((c) => c.slug === slug))
-              .filter((c): c is NonNullable<typeof c> => Boolean(c));
-            return (
-              <li
-                key={tech.name}
-                className="group grid gap-1 border-b border-line py-5 transition-colors duration-300 sm:grid-cols-12 sm:items-baseline sm:gap-4"
-              >
-                <span className="text-lg font-medium transition-colors duration-300 group-hover:text-accent sm:col-span-3">
-                  {tech.name}
-                </span>
-                <span className="text-sm leading-snug text-mute sm:col-span-5">{tech.note}</span>
-                <span className="mt-1 flex flex-wrap gap-x-4 gap-y-1 sm:col-span-4 sm:mt-0 sm:justify-end">
-                  {linked.length > 0 ? (
-                    linked.map((c) => (
-                      <Link
-                        key={c.slug}
-                        href={`/work/${c.slug}`}
-                        className="u-link font-mono text-[11px] tracking-[0.1em] text-mute uppercase transition-colors hover:text-fg"
-                      >
-                        {c.client} ↗
-                      </Link>
-                    ))
-                  ) : (
-                    <span className="font-mono text-[11px] tracking-[0.1em] text-mute/60 uppercase">
-                      client work under NDA
-                    </span>
-                  )}
-                </span>
-              </li>
-            );
-          })}
+          {category.items.map((tech) => (
+            <li
+              key={tech.name}
+              className="group grid gap-1 border-b border-line py-5 transition-colors duration-300 sm:grid-cols-12 sm:items-baseline sm:gap-4"
+            >
+              <span className="text-lg font-medium transition-colors duration-300 group-hover:text-accent sm:col-span-4">
+                {tech.name}
+              </span>
+              <span className="text-sm leading-snug text-mute sm:col-span-8">{tech.note}</span>
+            </li>
+          ))}
         </ul>
       </div>
     </div>

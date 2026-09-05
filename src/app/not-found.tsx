@@ -11,13 +11,13 @@ export default function NotFound() {
           This page didn&apos;t survive the reduction pass.
         </h1>
         <p className="mt-6 max-w-[44ch] text-lg text-mute">
-          Whatever was here either moved or never earned its place. The work, however, is very much
+          Whatever was here either moved or never earned its place. The studio, however, is very much
           alive.
         </p>
         <div className="mt-10 flex flex-wrap gap-4">
           <Button href="/">Back to the studio</Button>
-          <Button href="/work" variant="ghost">
-            See the work
+          <Button href="/products" variant="ghost">
+            See our products
           </Button>
         </div>
       </Container>

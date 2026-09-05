@@ -15,7 +15,6 @@ export type Service = {
     anchor: string;
     note: string;
   };
-  caseStudySlugs: string[];
   faqIds: string[];
   metaDescription: string;
 };
@@ -61,7 +60,6 @@ export const services: Service[] = [
       anchor: "from $99",
       note: "Typical marketing site: 2–4 weeks. Web applications: scoped after discovery.",
     },
-    caseStudySlugs: ["veyra-freight", "ember-and-oak"],
     faqIds: ["ownership", "stack", "timeline"],
     metaDescription:
       "Marketing sites, web applications, and e-commerce platforms engineered for speed and conversion. Fixed-scope builds from $99.",
@@ -106,7 +104,6 @@ export const services: Service[] = [
       anchor: "from $2,500",
       note: "MVP to store in 6–12 weeks. Ongoing releases via embedded team.",
     },
-    caseStudySlugs: ["pulseline"],
     faqIds: ["ownership", "team", "support"],
     metaDescription:
       "Native iOS, Android, and cross-platform apps with retention engineered in. MVP to app store in 6–12 weeks, from $2,500.",
@@ -151,7 +148,6 @@ export const services: Service[] = [
       anchor: "from $99/mo",
       note: "Three-month initial term, month-to-month after. No long lock-ins.",
     },
-    caseStudySlugs: ["ember-and-oak"],
     faqIds: ["retainer-lock", "reporting", "budget"],
     metaDescription:
       "Technical SEO, paid acquisition, and conversion optimization run as one system, measured in qualified pipeline. Retainers from $99/mo.",

@@ -11,7 +11,6 @@ import { Container } from "./ui/Container";
 import { MonoLabel } from "./ui/MonoLabel";
 
 const navLinks = [
-  { label: "Work", href: "/work" },
   { label: "Products", href: "/products" },
   { label: "Process", href: "/process" },
   { label: "Pricing", href: "/pricing" },

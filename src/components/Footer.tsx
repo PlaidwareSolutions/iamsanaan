@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { services } from "@/data/services";
-import { caseStudies } from "@/data/caseStudies";
 import { Container } from "./ui/Container";
 import { MonoLabel } from "./ui/MonoLabel";
 import { FooterCta } from "./FooterCta";
@@ -21,7 +20,7 @@ export function Footer() {
         <FooterCta />
 
         {/* Sitemap */}
-        <div className="grid grid-cols-2 gap-10 border-t border-line py-14 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-10 border-t border-line py-14 md:grid-cols-3">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="font-display text-xl text-fg">
               {site.wordmark}
@@ -46,24 +45,6 @@ export function Footer() {
               <li>
                 <Link href="/services" className="text-sm text-mute transition-colors hover:text-fg">
                   All services
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <MonoLabel as="h2">Work</MonoLabel>
-            <ul className="mt-4 space-y-2.5">
-              {caseStudies.map((c) => (
-                <li key={c.slug}>
-                  <Link href={`/work/${c.slug}`} className="text-sm text-mute transition-colors hover:text-fg">
-                    {c.client}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <Link href="/work" className="text-sm text-mute transition-colors hover:text-fg">
-                  All case studies
                 </Link>
               </li>
             </ul>

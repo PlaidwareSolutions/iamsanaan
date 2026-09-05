@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { services } from "@/data/services";
-import { caseStudies } from "@/data/caseStudies";
 import { getFaqs } from "@/data/faqs";
 import { outcomesLine } from "@/data/clients";
 import { products } from "@/data/products";
@@ -13,7 +12,6 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Accordion } from "@/components/ui/Accordion";
 import { LogoMarquee } from "@/components/ui/LogoMarquee";
 import { HeroCanvas } from "@/components/HeroCanvas";
-import { CaseStudyRow } from "@/components/CaseStudyRow";
 import { TechStackGrid } from "@/components/sections/TechStackGrid";
 import { EngagementCards } from "@/components/sections/EngagementCards";
 import { ProcessStrip } from "@/components/sections/ProcessStrip";
@@ -25,8 +23,6 @@ const studioStats = [
 ];
 
 export default function Home() {
-  const featuredQuote = caseStudies[0].quote;
-
   return (
     <>
       {/* 01 — Hero */}
@@ -60,8 +56,8 @@ export default function Home() {
             <Button href="/contact" size="lg">
               Start a project
             </Button>
-            <Button href="/work" variant="ghost" size="lg">
-              See the work
+            <Button href="/products" variant="ghost" size="lg">
+              See our products
             </Button>
           </Reveal>
           <Reveal delay={0.32}>
@@ -145,28 +141,8 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* 05 — Featured work */}
-      <Section tone="ink" index="03" eyebrow="Selected work">
-        <div className="mb-16 grid gap-6 md:grid-cols-12 md:items-end">
-          <h2 className="headline text-4xl md:col-span-7 md:text-5xl">
-            Judged by outcomes, not screenshots.
-          </h2>
-          <p className="text-mute md:col-span-4 md:col-start-9">
-            Every engagement ends with a number the client&apos;s CFO cares about. Here are three.
-          </p>
-        </div>
-
-        <div className="space-y-28 md:space-y-36">
-          {caseStudies.map((study, i) => (
-            <Reveal key={study.slug}>
-              <CaseStudyRow study={study} flip={i % 2 === 1} />
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
-      {/* 05b — Our own products */}
-      <Section tone="paper" index="04" eyebrow="Our own products">
+      {/* 05 — Our own products */}
+      <Section tone="ink" index="03" eyebrow="Our own products">
         <div className="mb-14 grid gap-6 md:grid-cols-12 md:items-end">
           <h2 className="headline text-4xl md:col-span-7 md:text-5xl">
             We eat our own cooking.
@@ -213,7 +189,7 @@ export default function Home() {
       </Section>
 
       {/* 06 — Process strip */}
-      <Section tone="ink" index="05" eyebrow="How we work">
+      <Section tone="paper" index="04" eyebrow="How we work">
         <div className="mb-14 grid gap-6 md:grid-cols-12 md:items-end">
           <h2 className="headline text-4xl md:col-span-7 md:text-5xl">
             A factory floor, not a black box.
@@ -226,46 +202,32 @@ export default function Home() {
       </Section>
 
       {/* 07 — Tech stack */}
-      <Section tone="ink" index="06" eyebrow="Stack">
+      <Section tone="ink" index="05" eyebrow="Stack">
         <div className="mb-14 grid gap-6 md:grid-cols-12 md:items-end">
           <h2 className="headline text-4xl md:col-span-8 md:text-5xl">
             Boring technology, deliberately.
           </h2>
           <p className="text-mute md:col-span-4 md:col-start-9">
-            Chosen so you can hire for it, audit it, and inherit it. Every entry links to shipped
-            work.
+            Chosen so you can hire for it, audit it, and inherit it.
           </p>
         </div>
         <TechStackGrid />
       </Section>
 
-      {/* 08 — Testimonial + studio stats */}
-      <Section tone="paper" index="07" eyebrow="Working with us">
-        <div className="grid gap-14 lg:grid-cols-12">
-          <figure className="lg:col-span-7">
-            <Reveal>
-              <blockquote className="headline text-2xl leading-[1.25] sm:text-3xl md:text-4xl">
-                &ldquo;{featuredQuote.text}&rdquo;
-              </blockquote>
-              <figcaption className="mt-8">
-                <p className="font-medium">{featuredQuote.author}</p>
-                <MonoLabel className="mt-1 block">{featuredQuote.role}</MonoLabel>
-              </figcaption>
+      {/* 08 — Studio stats */}
+      <Section tone="paper" index="06" eyebrow="Working with us">
+        <div className="grid gap-10 border-t border-line pt-10 md:grid-cols-3">
+          {studioStats.map((stat, i) => (
+            <Reveal key={stat.value} delay={i * 0.08}>
+              <p className="font-display text-5xl tracking-tight">{stat.value}</p>
+              <p className="mt-2 max-w-[28ch] text-sm text-mute">{stat.label}</p>
             </Reveal>
-          </figure>
-          <div className="flex flex-col justify-between gap-10 border-t border-line pt-10 lg:col-span-4 lg:col-start-9 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
-            {studioStats.map((stat) => (
-              <Reveal key={stat.value}>
-                <p className="font-display text-5xl tracking-tight">{stat.value}</p>
-                <p className="mt-2 text-sm text-mute">{stat.label}</p>
-              </Reveal>
-            ))}
-          </div>
+          ))}
         </div>
       </Section>
 
       {/* 09 — Engagement models */}
-      <Section tone="paper" index="08" eyebrow="How to hire us">
+      <Section tone="paper" index="07" eyebrow="How to hire us">
         <div className="mb-14 grid gap-6 md:grid-cols-12 md:items-end">
           <h2 className="headline text-4xl md:col-span-7 md:text-5xl">
             Three ways to buy. No mystery meat.
@@ -285,7 +247,7 @@ export default function Home() {
       </Section>
 
       {/* 10 — Objection FAQ + final CTA */}
-      <Section tone="ink" index="09" eyebrow="Before you ask">
+      <Section tone="ink" index="08" eyebrow="Before you ask">
         <div className="grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <h2 className="headline text-4xl md:text-5xl">

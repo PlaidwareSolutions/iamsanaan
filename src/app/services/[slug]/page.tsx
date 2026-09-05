@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { services, getService } from "@/data/services";
-import { getCaseStudy } from "@/data/caseStudies";
 import { getFaqs } from "@/data/faqs";
 import { PageHeader } from "@/components/PageHeader";
 import { Section } from "@/components/ui/Section";
@@ -9,7 +8,6 @@ import { MonoLabel, Tag } from "@/components/ui/MonoLabel";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Accordion } from "@/components/ui/Accordion";
-import { CaseStudyRow } from "@/components/CaseStudyRow";
 import { VignetteBoard } from "@/components/vignettes/VignetteBoard";
 import { PricingMatrix } from "@/components/sections/PricingMatrix";
 
@@ -30,10 +28,6 @@ export async function generateMetadata({
 export default async function ServicePage({ params }: { params: Promise<{ slug: string }> }) {
   const service = getService((await params).slug);
   if (!service) notFound();
-
-  const studies = service.caseStudySlugs
-    .map(getCaseStudy)
-    .filter((c): c is NonNullable<typeof c> => Boolean(c));
 
   return (
     <>
@@ -110,21 +104,8 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         </Section>
       )}
 
-      {/* Related work */}
-      {studies.length > 0 && (
-        <Section tone="ink" index={service.slug === "growth" ? "04" : "03"} eyebrow="Proof">
-          <div className="space-y-28">
-            {studies.map((study, i) => (
-              <Reveal key={study.slug}>
-                <CaseStudyRow study={study} flip={i % 2 === 1} />
-              </Reveal>
-            ))}
-          </div>
-        </Section>
-      )}
-
       {/* Engagement fit + contextual objections + CTA */}
-      <Section tone="paper" index={service.slug === "growth" ? "05" : "04"} eyebrow="Working together">
+      <Section tone="paper" index={service.slug === "growth" ? "04" : "03"} eyebrow="Working together">
         <div className="grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <MonoLabel>Typical engagement</MonoLabel>
