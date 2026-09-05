@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { readdirSync } from "node:fs";
+import path from "node:path";
 import { Amiri, Cormorant_Garamond } from "next/font/google";
 import { biodata } from "@/data/biodata";
 import { BiodataVerdict } from "@/components/BiodataVerdict";
+import { BiodataPhotos, type BiodataPhoto } from "@/components/BiodataPhotos";
 import { cn } from "@/lib/utils";
 
 const cormorant = Cormorant_Garamond({
@@ -18,6 +21,28 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+/** Photos dropped into public/bio-data/photos, in filename order. Listed once, at build. */
+const PHOTO_DIR = "bio-data/photos";
+function listPhotos(): BiodataPhoto[] {
+  try {
+    return readdirSync(path.join(process.cwd(), "public", PHOTO_DIR))
+      .filter((file) => /\.(jpe?g|png|webp|avif)$/i.test(file))
+      .sort()
+      .map((file) => ({
+        src: `/${PHOTO_DIR}/${file}`,
+        alt: file
+          .replace(/\.[^.]+$/, "")
+          .replace(/^\d+[-_ ]*/, "")
+          .split(/[-_]+/)
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" ")
+          .trim(),
+      }));
+  } catch {
+    return [];
+  }
+}
+
 const palette =
   "[--bio-ink:#15302E] [--bio-ink-soft:#3E5754] [--bio-rule:#C9D3D1] [--bio-brass:#9A6E33] [--bio-paper:#FBFAF6] [--bio-mute:#8B9694] [--bio-label:#7E8D8B] [--bio-hair:#EDEAE2]";
 
@@ -26,6 +51,8 @@ const heading =
   "mb-2.5 border-b border-(color:--bio-ink) pb-[5px] text-[9px] font-semibold tracking-[0.2em] text-(color:--bio-brass) uppercase";
 
 export default function BiodataPage() {
+  const photos = listPhotos();
+
   return (
     <main
       className={cn(
@@ -44,16 +71,21 @@ export default function BiodataPage() {
           {biodata.bismillah}
         </p>
 
-        <header className="border-t-2 border-b border-t-(color:--bio-ink) border-b-(color:--bio-rule) pt-4 pb-[18px]">
-          <p className="mb-2 text-[9px] font-semibold tracking-[0.18em] text-(color:--bio-brass) uppercase">
-            {biodata.kicker}
-          </p>
-          <h1 className="font-(family-name:--font-cormorant) text-3xl leading-[1.05] font-semibold tracking-[-0.3px] sm:text-[38px]">
-            {biodata.name}
-          </h1>
-          <p className="mt-[9px] font-(family-name:--font-cormorant) text-[17px] leading-[1.45] text-(color:--bio-ink-soft)">
-            {biodata.tagline}
-          </p>
+        <header className="flex flex-col gap-4 border-t-2 border-b border-t-(color:--bio-ink) border-b-(color:--bio-rule) pt-4 pb-[18px] sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+          <div>
+            <p className="mb-2 text-[9px] font-semibold tracking-[0.18em] text-(color:--bio-brass) uppercase">
+              {biodata.kicker}
+            </p>
+            <h1 className="font-(family-name:--font-cormorant) text-3xl leading-[1.05] font-semibold tracking-[-0.3px] sm:text-[38px]">
+              {biodata.name}
+            </h1>
+            <p className="mt-[9px] font-(family-name:--font-cormorant) text-[17px] leading-[1.45] text-(color:--bio-ink-soft)">
+              {biodata.tagline}
+            </p>
+          </div>
+          <div className="shrink-0 sm:pt-1">
+            <BiodataPhotos photos={photos} />
+          </div>
         </header>
 
         {biodata.sections.map((section) => (
