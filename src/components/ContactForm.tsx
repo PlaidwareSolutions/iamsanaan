@@ -48,6 +48,9 @@ const initial: FormData = {
   email: "",
 };
 
+const labelOf = (opts: { value: string; label: string }[], value: string) =>
+  opts.find((o) => o.value === value)?.label ?? value;
+
 const stepTitles = [
   "What are we building?",
   "What's the budget range?",
@@ -60,7 +63,7 @@ export function ContactForm() {
   const [data, setData] = useState<FormData>(initial);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [brief, setBrief] = useState<{ subject: string; body: string; href: string } | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const firstRender = useRef(true);
 
@@ -96,28 +99,55 @@ export function ContactForm() {
     }
     if (step < 3) setStep(step + 1);
     else {
-      setSubmitting(true);
-      // Demonstration build: submission is simulated client-side.
-      window.setTimeout(() => {
-        setSubmitting(false);
-        setSubmitted(true);
-      }, 900);
+      // No form backend is configured, so the brief is handed to the visitor's
+      // mail client addressed to the studio inbox, with a copyable fallback.
+      const who = `${data.name.trim()}${data.company.trim() ? ` (${data.company.trim()})` : ""}`;
+      const subject = `Project brief — ${who}`;
+      const body = [
+        `Project type: ${labelOf(projectTypes, data.projectType)}`,
+        `Budget: ${labelOf(budgets, data.budget)}`,
+        `Timeline: ${labelOf(timelines, data.timeline)}`,
+        "",
+        data.brief.trim() || "(No written brief — happy to talk it through.)",
+        "",
+        `— ${who}`,
+        data.email.trim(),
+      ].join("\n");
+      const href = `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      setBrief({ subject, body, href });
+      setSubmitted(true);
+      window.location.href = href;
     }
   };
 
-  if (submitted) {
+  if (submitted && brief) {
     return (
       <div aria-live="polite" className="border border-line bg-tone-2 p-8 md:p-12">
         <span className="flex size-12 items-center justify-center rounded-full bg-accent">
           <Check className="size-6 text-ink" aria-hidden />
         </span>
         <h2 ref={headingRef} tabIndex={-1} className="headline mt-6 text-3xl outline-none md:text-4xl">
-          Got it, {data.name.split(" ")[0]}.
+          Your brief is ready, {data.name.trim().split(" ")[0]}.
         </h2>
         <p className="mt-4 max-w-[52ch] leading-relaxed text-mute">
-          Your brief is with the principals — a real reply from a real person within{" "}
-          {site.anchors.responseTime}, usually sooner.
+          Your mail app should have opened with everything filled in — press send, and a real
+          reply from a real person follows within {site.anchors.responseTime}, usually sooner.
         </p>
+        <div className="mt-6 border-l-2 border-accent bg-tone p-5">
+          <p className="text-sm leading-relaxed">
+            <span className="font-medium">Nothing opened?</span>{" "}
+            <span className="text-mute">
+              Email it to{" "}
+              <a href={brief.href} className="u-link text-fg">
+                {site.email}
+              </a>{" "}
+              — here is your brief, ready to paste:
+            </span>
+          </p>
+          <pre className="mt-4 overflow-x-auto font-mono text-[12px] leading-relaxed whitespace-pre-wrap text-mute">
+            {brief.body}
+          </pre>
+        </div>
         <div className="mt-8 border-t border-line pt-6">
           <MonoLabel>What happens next</MonoLabel>
           <ol className="mt-4 space-y-3">
@@ -133,10 +163,6 @@ export function ContactForm() {
             ))}
           </ol>
         </div>
-        <p className="mt-8 font-mono text-[12px] text-mute">
-          Demonstration build — nothing was actually sent. In production this posts to the studio
-          inbox and CRM.
-        </p>
       </div>
     );
   }
@@ -380,11 +406,10 @@ export function ContactForm() {
         )}
         <button
           type="submit"
-          disabled={submitting}
-          className="inline-flex h-12 items-center gap-2 bg-accent px-7 font-medium text-ink transition-colors duration-300 hover:bg-fg hover:text-tone disabled:opacity-60"
+          className="inline-flex h-12 items-center gap-2 bg-accent px-7 font-medium text-ink transition-colors duration-300 hover:bg-fg hover:text-tone"
         >
-          {submitting ? "Sending…" : step === 3 ? "Send the brief" : "Continue"}
-          {!submitting && <ArrowRight aria-hidden className="size-4" />}
+          {step === 3 ? "Send the brief" : "Continue"}
+          <ArrowRight aria-hidden className="size-4" />
         </button>
       </div>
     </form>

@@ -47,6 +47,26 @@ export function NavBar() {
     };
   }, [menuOpen]);
 
+  // Close the mobile menu on Escape, and when the viewport grows past the
+  // breakpoint that hides it — otherwise the scroll lock outlives the menu.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const desktop = window.matchMedia("(min-width: 64rem)");
+    const onChange = () => desktop.matches && setMenuOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenuOpen(false);
+    desktop.addEventListener("change", onChange);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      desktop.removeEventListener("change", onChange);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
+  // Hover only opens the dropdown on devices that actually hover. On touch,
+  // the synthetic mouseenter fired before the tap would open it and the tap
+  // itself would immediately toggle it closed again.
+  const canHover = () => window.matchMedia("(hover: hover)").matches;
+
   // Escape + outside click close the services dropdown
   useEffect(() => {
     if (!servicesOpen) return;
@@ -93,8 +113,8 @@ export function NavBar() {
           <div
             ref={dropdownRef}
             className="relative"
-            onMouseEnter={() => setServicesOpen(true)}
-            onMouseLeave={() => setServicesOpen(false)}
+            onMouseEnter={() => canHover() && setServicesOpen(true)}
+            onMouseLeave={() => canHover() && setServicesOpen(false)}
           >
             <button
               aria-expanded={servicesOpen}
@@ -229,7 +249,7 @@ export function NavBar() {
           backdrop-filter would otherwise become the containing block for fixed) */}
       <div
         className={cn(
-          "tone-ink fixed inset-0 top-16 z-40 flex flex-col overflow-y-auto bg-ink transition-all duration-400 ease-(--ease-swift) lg:hidden",
+          "tone-ink fixed inset-0 top-16 z-40 flex flex-col overflow-y-auto bg-ink transition-all duration-400 ease-(--ease-swift) md:top-18 lg:hidden",
           menuOpen ? "pointer-events-auto visible opacity-100" : "pointer-events-none invisible opacity-0",
         )}
         aria-hidden={!menuOpen}
