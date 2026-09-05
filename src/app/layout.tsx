@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter_Tight, JetBrains_Mono } from "next/font/google";
 import { site } from "@/lib/site";
-import { NavBar } from "@/components/NavBar";
-import { Footer } from "@/components/Footer";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -43,17 +41,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${fraunces.variable} ${interTight.variable} ${jetbrains.variable}`}>
-      <body className="tone-ink">
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-accent focus:px-4 focus:py-2 focus:text-ink"
-        >
-          Skip to content
-        </a>
-        <NavBar />
-        <main id="main">{children}</main>
-        <Footer />
-      </body>
+      <body className="tone-ink">{children}</body>
     </html>
   );
 }

@@ -1,9 +1,11 @@
 import { Container } from "@/components/ui/Container";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { Button } from "@/components/ui/Button";
+import { SiteChrome } from "@/components/SiteChrome";
 
 export default function NotFound() {
   return (
+    <SiteChrome>
     <div className="tone-ink flex min-h-svh items-center">
       <Container className="py-32">
         <MonoLabel className="text-accent">404 — Not found</MonoLabel>
@@ -22,5 +24,6 @@ export default function NotFound() {
         </div>
       </Container>
     </div>
+    </SiteChrome>
   );
 }
