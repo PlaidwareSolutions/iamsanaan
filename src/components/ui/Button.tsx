@@ -1,32 +1,38 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type ButtonProps = {
   href?: string;
   onClick?: () => void;
   type?: "button" | "submit";
+  /** primary: blue pill · ghost: gray pill · text: blue link with a chevron */
   variant?: "primary" | "ghost" | "text";
-  size?: "md" | "lg";
+  size?: "sm" | "md" | "lg";
   className?: string;
   children: React.ReactNode;
   disabled?: boolean;
 };
 
 const base =
-  "group inline-flex items-center justify-center gap-2 font-sans font-medium transition-all duration-300 ease-(--ease-swift) focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-3 disabled:pointer-events-none disabled:opacity-50";
+  "group inline-flex items-center justify-center font-normal transition-colors duration-300 ease-(--ease-swift) focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-3 disabled:pointer-events-none disabled:opacity-50";
 
 const variants = {
-  primary:
-    "bg-accent text-ink hover:bg-fg hover:text-tone active:translate-y-px",
-  ghost:
-    "border border-line-strong text-fg hover:border-accent hover:text-accent active:translate-y-px",
-  text: "text-fg p-0 hover:text-accent",
+  primary: "rounded-full bg-accent text-white hover:bg-accent-hover",
+  ghost: "rounded-full bg-control text-fg hover:bg-control-hover",
+  text: "gap-0.5 text-link hover:underline underline-offset-4",
 };
 
 const sizes = {
-  md: "h-11 px-6 text-[15px]",
-  lg: "h-13 px-8 text-base",
+  sm: "h-7 px-3 text-[12px]",
+  md: "h-9 px-4 text-[14px]",
+  lg: "h-11 px-[22px] text-[17px]",
+};
+
+const textSizes = {
+  sm: "text-[12px]",
+  md: "text-[14px]",
+  lg: "text-[17px]",
 };
 
 export function Button({
@@ -39,16 +45,16 @@ export function Button({
   children,
   disabled,
 }: ButtonProps) {
-  const cls = cn(base, variants[variant], variant !== "text" && sizes[size], className);
+  const cls = cn(
+    base,
+    variants[variant],
+    variant === "text" ? textSizes[size] : sizes[size],
+    className,
+  );
   const content = (
     <>
       {children}
-      {variant === "text" && (
-        <ArrowUpRight
-          aria-hidden
-          className="size-4 transition-transform duration-300 ease-(--ease-swift) group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-        />
-      )}
+      {variant === "text" && <ChevronRight aria-hidden className="size-[1em] translate-y-px" />}
     </>
   );
 

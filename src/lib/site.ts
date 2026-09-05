@@ -6,9 +6,9 @@ export const site = {
   name: "Sanaan",
   wordmark: "sanaan",
   legalName: "Sanaan Digital Studio LLC",
-  tagline: "Digital products that generate pipeline.",
+  tagline: "We build websites and mobile apps.",
   description:
-    "Sanaan is a digital product and growth studio. We design and build web platforms, mobile apps, and the growth engines behind them — for companies that can't afford a miss.",
+    "Sanaan builds websites and mobile apps for businesses in Houston and beyond. Fixed prices, progress you can see every week, and you own everything we make.",
   url: "https://iamsanaan.com",
   email: "sanaan7788@gmail.com",
   phone: "+1 (346) 244-0364",

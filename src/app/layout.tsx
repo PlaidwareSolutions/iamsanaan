@@ -1,24 +1,11 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { Inter, Inter_Tight } from "next/font/google";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-fraunces",
-  style: ["normal", "italic"],
-  axes: ["opsz"],
-});
-
-const interTight = Inter_Tight({
-  subsets: ["latin"],
-  variable: "--font-inter-tight",
-});
-
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jbm",
-});
+/** Inter stands in for SF Pro on non-Apple devices; Inter Tight is kept for /bio-data. */
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const interTight = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -40,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${interTight.variable} ${jetbrains.variable}`}>
-      <body className="tone-ink">{children}</body>
+    <html lang="en" className={`${inter.variable} ${interTight.variable}`}>
+      <body className="tone-paper">{children}</body>
     </html>
   );
 }

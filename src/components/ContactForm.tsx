@@ -122,23 +122,23 @@ export function ContactForm() {
 
   if (submitted && brief) {
     return (
-      <div aria-live="polite" className="border border-line bg-tone-2 p-8 md:p-12">
+      <div aria-live="polite" className="rounded-tile bg-tone-2 p-8 md:p-12">
         <span className="flex size-12 items-center justify-center rounded-full bg-accent">
-          <Check className="size-6 text-ink" aria-hidden />
+          <Check className="size-6 text-white" aria-hidden />
         </span>
-        <h2 ref={headingRef} tabIndex={-1} className="headline mt-6 text-3xl outline-none md:text-4xl">
+        <h2 ref={headingRef} tabIndex={-1} className="mt-6 text-[32px] font-semibold tracking-[-0.02em] outline-none md:text-[40px]">
           Your brief is ready, {data.name.trim().split(" ")[0]}.
         </h2>
-        <p className="mt-4 max-w-[52ch] leading-relaxed text-mute">
+        <p className="mt-4 max-w-[52ch] text-[17px] leading-[1.47] text-mute">
           Your mail app should have opened with everything filled in — press send, and a real
           reply from a real person follows within {site.anchors.responseTime}, usually sooner.
         </p>
-        <div className="mt-6 border-l-2 border-accent bg-tone p-5">
+        <div className="mt-6 rounded-card bg-tone p-5">
           <p className="text-sm leading-relaxed">
             <span className="font-medium">Nothing opened?</span>{" "}
             <span className="text-mute">
               Email it to{" "}
-              <a href={brief.href} className="u-link text-fg">
+              <a href={brief.href} className="u-link">
                 {site.email}
               </a>{" "}
               — here is your brief, ready to paste:
@@ -157,7 +157,7 @@ export function ContactForm() {
               "If it's a fit: a two-week discovery with a fixed quote at the end.",
             ].map((item, i) => (
               <li key={i} className="flex gap-4 text-[15px]">
-                <span className="font-mono text-[12px] text-accent">{String(i + 1).padStart(2, "0")}</span>
+                <span className="text-[12px] font-semibold text-accent">{String(i + 1).padStart(2, "0")}</span>
                 <span className="text-mute">{item}</span>
               </li>
             ))}
@@ -185,8 +185,8 @@ export function ContactForm() {
             <span
               key={i}
               className={cn(
-                "h-1 w-10 transition-colors duration-500",
-                i <= step ? "bg-accent" : "bg-line",
+                "h-1 w-10 rounded-full transition-colors duration-500",
+                i <= step ? "bg-accent" : "bg-control",
               )}
             />
           ))}
@@ -196,7 +196,7 @@ export function ContactForm() {
       <h2
         ref={headingRef}
         tabIndex={-1}
-        className="headline mt-6 text-2xl outline-none md:text-3xl"
+        className="mt-6 text-[28px] font-semibold tracking-[-0.02em] outline-none md:text-[32px]"
         aria-label={`Step ${step + 1} of 4: ${stepTitles[step]}`}
       >
         {stepTitles[step]}
@@ -212,9 +212,9 @@ export function ContactForm() {
                 <label
                   key={type.value}
                   className={cn(
-                    "cursor-pointer border p-5 transition-all duration-300",
+                    "cursor-pointer rounded-card border p-5 transition-all duration-300",
                     data.projectType === type.value
-                      ? "border-accent bg-tone-2"
+                      ? "border-accent bg-accent/5"
                       : "border-line hover:border-line-strong",
                   )}
                 >
@@ -252,9 +252,9 @@ export function ContactForm() {
                 <label
                   key={b.value}
                   className={cn(
-                    "cursor-pointer border px-5 py-3.5 font-medium transition-all duration-300",
+                    "cursor-pointer rounded-full border px-5 py-3 font-medium transition-all duration-300",
                     data.budget === b.value
-                      ? "border-accent bg-accent text-ink"
+                      ? "border-accent bg-accent text-white"
                       : "border-line hover:border-line-strong",
                   )}
                 >
@@ -271,7 +271,7 @@ export function ContactForm() {
               ))}
             </div>
             {data.budget === "under-99" && (
-              <div className="mt-6 border-l-2 border-accent bg-tone-2 p-5" role="status">
+              <div className="mt-6 rounded-card bg-tone-2 p-5" role="status">
                 <p className="text-sm leading-relaxed">
                   <span className="font-medium">Honest note:</span>{" "}
                   <span className="text-mute">
@@ -283,7 +283,7 @@ export function ContactForm() {
                 </p>
               </div>
             )}
-            <p className="mt-6 font-mono text-[12px] text-mute">
+            <p className="mt-6 text-[12px] text-mute">
               Ranges only — a fixed quote comes after discovery, in writing.
             </p>
           </fieldset>
@@ -299,9 +299,9 @@ export function ContactForm() {
                   <label
                     key={t.value}
                     className={cn(
-                      "cursor-pointer border px-4 py-2.5 text-sm transition-all duration-300",
+                      "cursor-pointer rounded-full border px-4 py-2.5 text-sm transition-all duration-300",
                       data.timeline === t.value
-                        ? "border-accent bg-tone-2 text-fg"
+                        ? "border-accent bg-accent/5 text-fg"
                         : "border-line text-mute hover:border-line-strong hover:text-fg",
                     )}
                   >
@@ -328,7 +328,7 @@ export function ContactForm() {
                 value={data.brief}
                 onChange={(e) => set({ brief: e.target.value })}
                 placeholder="The problem, the audience, the number you want to move. Plain language beats a spec."
-                className="mt-3 w-full resize-y border border-line bg-tone-2 p-4 text-[15px] placeholder:text-mute/60 focus:border-accent focus:outline-none"
+                className="mt-3 w-full resize-y rounded-[12px] border border-line-strong bg-tone p-4 text-[17px] placeholder:text-mute/60 focus:border-accent focus:ring-2 focus:ring-accent/25 focus:outline-none"
               />
             </div>
           </div>
@@ -347,7 +347,7 @@ export function ContactForm() {
                 autoComplete="name"
                 value={data.name}
                 onChange={(e) => set({ name: e.target.value })}
-                className="mt-2 w-full border border-line bg-tone-2 p-3.5 text-[15px] focus:border-accent focus:outline-none"
+                className="mt-2 w-full rounded-[12px] border border-line-strong bg-tone p-3.5 text-[17px] focus:border-accent focus:ring-2 focus:ring-accent/25 focus:outline-none"
               />
             </div>
             <div>
@@ -360,7 +360,7 @@ export function ContactForm() {
                 autoComplete="organization"
                 value={data.company}
                 onChange={(e) => set({ company: e.target.value })}
-                className="mt-2 w-full border border-line bg-tone-2 p-3.5 text-[15px] focus:border-accent focus:outline-none"
+                className="mt-2 w-full rounded-[12px] border border-line-strong bg-tone p-3.5 text-[17px] focus:border-accent focus:ring-2 focus:ring-accent/25 focus:outline-none"
               />
             </div>
             <div className="sm:col-span-2">
@@ -374,7 +374,7 @@ export function ContactForm() {
                 value={data.email}
                 onChange={(e) => set({ email: e.target.value })}
                 aria-describedby={error ? "form-error" : undefined}
-                className="mt-2 w-full border border-line bg-tone-2 p-3.5 text-[15px] focus:border-accent focus:outline-none"
+                className="mt-2 w-full rounded-[12px] border border-line-strong bg-tone p-3.5 text-[17px] focus:border-accent focus:ring-2 focus:ring-accent/25 focus:outline-none"
               />
             </div>
           </div>
@@ -382,7 +382,7 @@ export function ContactForm() {
       </div>
 
       {error && (
-        <p id="form-error" role="alert" className="mt-4 border-l-2 border-accent pl-3 text-sm text-accent">
+        <p id="form-error" role="alert" className="mt-4 text-sm text-[#e30000]">
           {error}
         </p>
       )}
@@ -406,7 +406,7 @@ export function ContactForm() {
         )}
         <button
           type="submit"
-          className="inline-flex h-12 items-center gap-2 bg-accent px-7 font-medium text-ink transition-colors duration-300 hover:bg-fg hover:text-tone"
+          className="inline-flex h-11 items-center gap-2 rounded-full bg-accent px-6 text-[17px] text-white transition-colors duration-300 hover:bg-accent-hover"
         >
           {step === 3 ? "Send the brief" : "Continue"}
           <ArrowRight aria-hidden className="size-4" />

@@ -1,52 +1,90 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Fonts */
-  --font-display: var(--font-fraunces), Georgia, serif;
+  /* One family everywhere: SF on Apple devices, Inter elsewhere. */
+  --font-display: var(--font-system);
+  /* Kept for /bio-data, which opts into it explicitly. */
   --font-sans: var(--font-inter-tight), system-ui, sans-serif;
-  --font-mono: var(--font-jbm), ui-monospace, monospace;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
 
-  /* Brand palette — "Editorial Terminal" */
-  --color-ink: #0c0c0d;
-  --color-ink-2: #141416;
-  --color-ink-3: #1b1b1e;
-  --color-bone: #edeae1;
-  --color-paper: #f3f1ea;
-  --color-paper-2: #fbfaf6;
-  --color-accent: #ff4d00;
+  /* Palette — apple.com neutrals with one blue */
+  --color-ink: #000000;
+  --color-ink-2: #1d1d1f;
+  --color-ink-3: #2d2d2f;
+  --color-bone: #f5f5f7;
+  --color-paper: #ffffff;
+  --color-paper-2: #f5f5f7;
+  --color-accent: #0071e3;
+  --color-accent-hover: #0077ed;
 
-  /* Tone-aware roles — resolved per section via .tone-ink / .tone-paper */
+  /* Tone-aware roles — resolved per section via .tone-ink / .tone-paper / .tone-gray */
   --color-tone: var(--tone-bg);
   --color-tone-2: var(--tone-bg2);
   --color-fg: var(--tone-fg);
   --color-mute: var(--tone-mute);
   --color-line: var(--tone-line);
   --color-line-strong: var(--tone-line-strong);
+  --color-link: var(--tone-link);
+  --color-control: var(--tone-control);
+  --color-control-hover: var(--tone-control-hover);
 
-  /* Motion */
-  --ease-swift: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Shape */
+  --radius-tile: 28px;
+  --radius-card: 18px;
+  --shadow-tile: 0 24px 60px rgb(0 0 0 / 0.1);
+  --shadow-card: 2px 4px 12px rgb(0 0 0 / 0.08);
+
+  /* Motion — apple.com's standard curves */
+  --ease-swift: cubic-bezier(0.4, 0, 0.6, 1);
+  --ease-out: cubic-bezier(0.25, 0.1, 0.3, 1);
+}
+
+:root {
+  --font-system:
+    -apple-system, BlinkMacSystemFont, var(--font-inter), "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
 }
 
 /* ---------- Tones ---------- */
 
 .tone-ink {
-  --tone-bg: #0c0c0d;
-  --tone-bg2: #141416;
-  --tone-fg: #edeae1;
-  --tone-mute: #a3a29b;
-  --tone-line: rgb(237 234 225 / 0.14);
-  --tone-line-strong: rgb(237 234 225 / 0.32);
+  --tone-bg: #000000;
+  --tone-bg2: #1d1d1f;
+  --tone-fg: #f5f5f7;
+  --tone-mute: #86868b;
+  --tone-line: rgb(255 255 255 / 0.16);
+  --tone-line-strong: rgb(255 255 255 / 0.32);
+  --tone-link: #2997ff;
+  --tone-control: rgb(255 255 255 / 0.12);
+  --tone-control-hover: rgb(255 255 255 / 0.2);
   background-color: var(--tone-bg);
   color: var(--tone-fg);
 }
 
 .tone-paper {
-  --tone-bg: #f3f1ea;
-  --tone-bg2: #fbfaf6;
-  --tone-fg: #1a1a1c;
-  --tone-mute: #625f56;
-  --tone-line: rgb(26 26 28 / 0.14);
-  --tone-line-strong: rgb(26 26 28 / 0.34);
+  --tone-bg: #ffffff;
+  --tone-bg2: #f5f5f7;
+  --tone-fg: #1d1d1f;
+  --tone-mute: #6e6e73;
+  --tone-line: rgb(0 0 0 / 0.1);
+  --tone-line-strong: rgb(0 0 0 / 0.24);
+  --tone-link: #0066cc;
+  --tone-control: #e8e8ed;
+  --tone-control-hover: #d2d2d7;
+  background-color: var(--tone-bg);
+  color: var(--tone-fg);
+}
+
+.tone-gray {
+  --tone-bg: #f5f5f7;
+  --tone-bg2: #ffffff;
+  --tone-fg: #1d1d1f;
+  --tone-mute: #6e6e73;
+  --tone-line: rgb(0 0 0 / 0.1);
+  --tone-line-strong: rgb(0 0 0 / 0.24);
+  --tone-link: #0066cc;
+  --tone-control: #e8e8ed;
+  --tone-control-hover: #d2d2d7;
   background-color: var(--tone-bg);
   color: var(--tone-fg);
 }
@@ -58,67 +96,69 @@ html {
 }
 
 body {
-  font-family: var(--font-sans);
-  background-color: var(--color-ink);
-  color: var(--color-bone);
+  font-family: var(--font-system);
+  background-color: #ffffff;
+  color: #1d1d1f;
+  letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background-color: #ff4d00;
-  color: #0c0c0d;
+  background-color: #b3d7ff;
+  color: #1d1d1f;
 }
 
 :focus-visible {
-  outline: 2px solid #ff4d00;
+  outline: 2px solid #0071e3;
   outline-offset: 3px;
 }
 
-.font-display {
-  font-optical-sizing: auto;
-  letter-spacing: -0.015em;
-}
-
-/* Balanced display headlines */
+/* Display headlines — SF Pro Display sizing rules */
 .headline {
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-weight: 450;
+  font-family: var(--font-system);
+  font-weight: 600;
   letter-spacing: -0.02em;
-  line-height: 1.02;
+  line-height: 1.07;
   text-wrap: balance;
 }
 
 /* ---------- Utilities ---------- */
 
-/* Underline that draws in on hover */
+/* Frosted glass, as on the global nav */
+.glass {
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* Rounded surfaces */
+.tile {
+  border-radius: var(--radius-tile);
+  background-color: var(--tone-bg2);
+}
+
+/* Gradient-tinted emphasis word in a headline */
+.text-gradient {
+  background-image: linear-gradient(100deg, #1e3a5f 0%, #2f6cb0 45%, #6ea8e6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.tone-ink .text-gradient {
+  background-image: linear-gradient(100deg, #ffffff 0%, #a9d0ff 45%, #2997ff 100%);
+}
+
+/* Text link that underlines on hover */
 .u-link {
-  background-image: linear-gradient(currentColor, currentColor);
-  background-size: 0% 1px;
-  background-position: 0 calc(100% - 1px);
-  background-repeat: no-repeat;
-  transition: background-size 0.45s var(--ease-swift);
+  color: var(--tone-link);
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.24s var(--ease-swift);
 }
 .u-link:hover,
 .u-link:focus-visible {
-  background-size: 100% 1px;
-}
-
-/* Logo marquee */
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-.marquee-track {
-  animation: marquee 42s linear infinite;
-}
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
+  text-decoration-line: underline;
+  text-decoration-color: currentColor;
 }
 
 /* Hide scrollbars on horizontal scrollers while keeping scrollability */

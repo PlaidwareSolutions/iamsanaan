@@ -1,34 +1,34 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { site } from "@/lib/site";
-import { MonoLabel } from "./ui/MonoLabel";
+import { Button } from "./ui/Button";
+import { Reveal } from "./ui/Reveal";
 
-/** Footer conversion band — suppressed on /contact, where the form already is. */
+/** Final call to action: a black tile with one line and one button. Suppressed on /contact. */
 export function FooterCta() {
   const pathname = usePathname();
   if (pathname === "/contact") return null;
 
   return (
-    <div className="flex flex-col gap-8 py-16 md:flex-row md:items-end md:justify-between md:py-24">
-      <div>
-        <MonoLabel>Next step</MonoLabel>
-        <p className="headline mt-4 max-w-[16ch] text-4xl md:text-6xl">
-          Tell us what needs to exist.
+    <section className="tone-ink py-24 md:py-32">
+      <Reveal className="mx-auto max-w-[820px] px-5 text-center">
+        <h2 className="headline text-[36px] sm:text-[44px] md:text-[56px]">Tell us what you need.</h2>
+        <p className="mx-auto mt-5 max-w-[48ch] text-[19px] leading-[1.4] text-mute md:text-[21px]">
+          Four questions, two minutes, and a reply from a principal within {site.anchors.responseTime}.
         </p>
-      </div>
-      <div className="flex flex-col items-start gap-4">
-        <Link
-          href="/contact"
-          className="inline-flex h-13 items-center bg-accent px-8 text-base font-medium text-ink transition-colors duration-300 hover:bg-bone"
-        >
-          Start a project
-        </Link>
-        <p className="font-mono text-[12px] text-mute">
-          Engagements start at {site.anchors.projectMinimum} · reply within {site.anchors.responseTime}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+          <Button href="/contact" size="lg">
+            Start a project
+          </Button>
+          <Button href={`mailto:${site.email}`} variant="text" size="lg">
+            Or email us
+          </Button>
+        </div>
+        <p className="mt-8 text-[12px] text-mute">
+          From {site.anchors.projectMinimum} · you own everything we make
         </p>
-      </div>
-    </div>
+      </Reveal>
+    </section>
   );
 }

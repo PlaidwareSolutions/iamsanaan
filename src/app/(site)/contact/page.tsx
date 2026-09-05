@@ -19,50 +19,42 @@ export default function ContactPage() {
       <PageHeader
         eyebrow="Start a project"
         title="Four questions. Two minutes. A real reply."
-        intro={`Skip the "how can we help you today" theater. Tell us what needs to exist and what it's worth to you — a principal reads every brief and replies within ${site.anchors.responseTime}.`}
+        intro={`Skip the “how can we help you today” theater. Tell us what needs to exist and what it’s worth to you — a principal reads every brief and replies within ${site.anchors.responseTime}.`}
       />
 
-      <Section tone="paper" seam={false} className="pt-16 md:pt-20 lg:pt-20">
-        <div className="grid gap-16 lg:grid-cols-12">
-          {/* Form */}
+      <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
+        <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
             <ContactForm />
           </div>
 
-          {/* Direct channels */}
-          <aside className="lg:col-span-4 lg:col-start-9">
-            <div className="border-t border-line pt-6">
+          <aside className="space-y-4 lg:col-span-4 lg:col-start-9">
+            <div className="tile p-6">
               <MonoLabel>Prefer directly</MonoLabel>
-              <a
-                href={`mailto:${site.email}`}
-                className="u-link mt-3 block text-lg font-medium hover:text-accent"
-              >
+              <a href={`mailto:${site.email}`} className="u-link mt-3 block text-[19px] font-semibold">
                 {site.email}
               </a>
               <a
                 href={`tel:${site.phone.replace(/[^+\d]/g, "")}`}
-                className="mt-2 block text-lg text-mute transition-colors hover:text-fg"
+                className="mt-1 block text-[17px] text-mute transition-colors hover:text-fg"
               >
                 {site.phone}
               </a>
             </div>
 
-            <div className="mt-10 border-t border-line pt-6">
+            <div className="tile p-6">
               <MonoLabel>Studio</MonoLabel>
-              <p className="mt-3 text-[15px] leading-relaxed text-mute">{site.address}</p>
-              <p className="mt-1 font-mono text-[12px] text-mute">
-                Mon–Fri · 9–6 CT · visitors welcome by appointment
-              </p>
+              <p className="mt-3 text-[15px] leading-[1.47] text-mute">{site.address}</p>
+              <p className="mt-1 text-[12px] text-mute">Mon–Fri · 9–6 CT · visitors welcome by appointment</p>
             </div>
 
-            <div className="mt-10 border-t border-line pt-6">
+            <div className="tile p-6">
               <MonoLabel>Before you write</MonoLabel>
-              <ul className="mt-4 space-y-3 text-sm leading-relaxed text-mute">
+              <ul className="mt-4 space-y-3 text-[15px] leading-[1.47] text-mute">
                 <li>
-                  Engagements start at{" "}
-                  <span className="text-fg">{site.anchors.projectMinimum}</span> — projects — and{" "}
-                  <span className="text-fg">{site.anchors.retainerMinimum}</span> for growth
-                  retainers.
+                  Engagements start at <span className="text-fg">{site.anchors.projectMinimum}</span>{" "}
+                  — projects — and <span className="text-fg">{site.anchors.retainerMinimum}</span> for
+                  growth retainers.
                 </li>
                 <li>
                   A principal replies within <span className="text-fg">{site.anchors.responseTime}</span>.
@@ -76,11 +68,10 @@ export default function ContactPage() {
       </Section>
 
       {/* Final objections at the point of conversion */}
-      <Section tone="paper" index="01" eyebrow="Last-minute doubts" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="gray" eyebrow="Last-minute doubts" title="Read before you hesitate.">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <h2 className="headline text-3xl md:text-4xl">Read before you hesitate.</h2>
-            <p className="mt-4 max-w-[40ch] text-mute">
+            <p className="max-w-[40ch] text-[17px] leading-[1.47] text-mute">
               The four answers that usually close the tab — or open the conversation.
             </p>
           </div>

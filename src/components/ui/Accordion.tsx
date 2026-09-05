@@ -1,11 +1,11 @@
 "use client";
 
 import { useId, useState } from "react";
-import { Plus } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import type { Faq } from "@/data/faqs";
 import { cn } from "@/lib/utils";
 
-/** Objection-handling accordion. Hard questions, direct answers, keyboard-first. */
+/** Objection-handling accordion, hairline rows, chevron that turns. */
 export function Accordion({ items, className }: { items: Faq[]; className?: string }) {
   const [open, setOpen] = useState<string | null>(items[0]?.id ?? null);
   const baseId = useId();
@@ -24,14 +24,16 @@ export function Accordion({ items, className }: { items: Faq[]; className?: stri
                 aria-expanded={isOpen}
                 aria-controls={panelId}
                 onClick={() => setOpen(isOpen ? null : item.id)}
-                className="group flex w-full items-center justify-between gap-6 py-5 text-left transition-colors duration-300 hover:text-accent md:py-6"
+                className="group flex w-full items-center justify-between gap-6 py-5 text-left transition-colors duration-300 hover:text-link md:py-6"
               >
-                <span className="text-base font-medium md:text-lg">{item.question}</span>
-                <Plus
+                <span className="text-[17px] font-semibold tracking-[-0.01em] md:text-[19px]">
+                  {item.question}
+                </span>
+                <ChevronDown
                   aria-hidden
                   className={cn(
-                    "size-5 shrink-0 text-mute transition-transform duration-300 ease-(--ease-swift) group-hover:text-accent",
-                    isOpen && "rotate-45",
+                    "size-5 shrink-0 text-mute transition-transform duration-300 ease-(--ease-swift)",
+                    isOpen && "rotate-180",
                   )}
                 />
               </button>
@@ -41,12 +43,12 @@ export function Accordion({ items, className }: { items: Faq[]; className?: stri
               role="region"
               aria-labelledby={headerId}
               className={cn(
-                "grid transition-[grid-template-rows] duration-400 ease-(--ease-swift)",
+                "grid transition-[grid-template-rows] duration-300 ease-(--ease-swift)",
                 isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
               )}
             >
               <div className="overflow-hidden">
-                <p className="max-w-[62ch] pb-6 leading-relaxed text-mute">{item.answer}</p>
+                <p className="max-w-[64ch] pb-6 text-[17px] leading-[1.47] text-mute">{item.answer}</p>
               </div>
             </div>
           </div>

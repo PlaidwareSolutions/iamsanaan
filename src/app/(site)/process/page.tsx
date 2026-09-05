@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Check } from "lucide-react";
 import { phases, sprint } from "@/data/process";
 import { PageHeader } from "@/components/PageHeader";
 import { Section } from "@/components/ui/Section";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
+import { Gallery } from "@/components/ui/Gallery";
+import { ScrollText } from "@/components/ui/ScrollText";
 
 export const metadata: Metadata = {
   title: "Process",
@@ -29,33 +32,31 @@ export default function ProcessPage() {
       />
 
       {/* Phases */}
-      <Section tone="paper" index="01" eyebrow="The five phases" seam={false}>
-        <div className="space-y-0">
+      <Section tone="gray" eyebrow="The five phases" title="From first call to launch, in the open.">
+        <div className="space-y-4">
           {phases.map((phase) => (
             <Reveal key={phase.index}>
-              <article className="grid gap-8 border-t border-line py-14 md:py-16 lg:grid-cols-12 lg:gap-12">
+              <article className="tile grid gap-8 p-8 md:p-10 lg:grid-cols-12 lg:gap-12">
                 <div className="lg:col-span-4">
-                  <div className="flex items-baseline gap-5">
-                    <span className="font-display text-6xl text-accent md:text-7xl">{phase.index}</span>
-                    <div>
-                      <h2 className="headline text-3xl md:text-4xl">{phase.name}</h2>
-                      <MonoLabel className="mt-2 block">{phase.window}</MonoLabel>
-                    </div>
-                  </div>
+                  <p className="text-gradient text-[56px] leading-none font-semibold tracking-[-0.03em] md:text-[72px]">
+                    {phase.index}
+                  </p>
+                  <h2 className="mt-4 text-[28px] font-semibold tracking-[-0.02em]">{phase.name}</h2>
+                  <MonoLabel className="mt-1 block">{phase.window}</MonoLabel>
                 </div>
                 <div className="lg:col-span-4">
-                  <p className="leading-relaxed text-mute">{phase.summary}</p>
-                  <div className="mt-6 border-l-2 border-accent pl-4">
-                    <MonoLabel>What you&apos;ll see</MonoLabel>
-                    <p className="mt-1.5 text-[15px]">{phase.youSee}</p>
+                  <p className="text-[17px] leading-[1.47] text-mute">{phase.summary}</p>
+                  <div className="mt-6 rounded-card bg-tone p-5">
+                    <MonoLabel>What you’ll see</MonoLabel>
+                    <p className="mt-1.5 text-[15px] leading-[1.47]">{phase.youSee}</p>
                   </div>
                 </div>
                 <div className="lg:col-span-3 lg:col-start-10">
                   <MonoLabel>Deliverables</MonoLabel>
                   <ul className="mt-4 space-y-2.5">
                     {phase.deliverables.map((d) => (
-                      <li key={d} className="flex gap-3 text-sm">
-                        <span aria-hidden className="mt-[7px] size-1.5 shrink-0 bg-accent" />
+                      <li key={d} className="flex gap-3 text-[15px]">
+                        <Check aria-hidden className="mt-0.5 size-4 shrink-0 text-accent" />
                         {d}
                       </li>
                     ))}
@@ -68,92 +69,79 @@ export default function ProcessPage() {
       </Section>
 
       {/* Design sprint */}
-      <Section tone="ink" index="02" eyebrow="Inside the design phase">
-        <div className="mb-14 grid gap-6 md:grid-cols-12 md:items-end">
-          <h2 className="headline text-3xl md:col-span-7 md:text-4xl">
-            One week from question to tested prototype.
-          </h2>
-          <p className="text-mute md:col-span-4 md:col-start-9">
-            Design runs on a five-day sprint cycle. Here&apos;s one week, hour by honest hour.
-          </p>
-        </div>
-        <div className="no-scrollbar -mx-5 overflow-x-auto px-5 sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0">
-          <ol className="grid min-w-[820px] grid-cols-5 gap-px border border-line bg-line lg:min-w-0">
-            {sprint.map((day, i) => (
-              <Reveal as="li" key={day.day} delay={i * 0.06} className="bg-tone">
-                <div className="group h-full p-6 transition-colors duration-500 hover:bg-tone-2">
-                  <MonoLabel className="text-accent">{day.day}</MonoLabel>
-                  <p className="mt-3 text-xl font-medium">{day.name}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-mute">{day.detail}</p>
-                </div>
-              </Reveal>
-            ))}
-          </ol>
-        </div>
+      <Section
+        tone="paper"
+        eyebrow="Inside the design phase"
+        title="One week from question to tested prototype."
+        lede="Design runs on a five-day sprint cycle. Here’s one week, hour by honest hour."
+      >
+        <Gallery label="The design sprint, day by day" itemClassName="w-[min(300px,78vw)]">
+          {sprint.map((day) => (
+            <div key={day.day} className="tile flex h-full min-h-[260px] flex-col bg-tone-2 p-7">
+              <MonoLabel className="text-accent">{day.day}</MonoLabel>
+              <p className="mt-3 text-[21px] font-semibold tracking-[-0.01em]">{day.name}</p>
+              <p className="mt-3 text-[15px] leading-[1.47] text-mute">{day.detail}</p>
+            </div>
+          ))}
+        </Gallery>
       </Section>
 
       {/* Post-launch support */}
-      <Section tone="ink" index="03" eyebrow="After launch" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="gray" eyebrow="After launch" title="Software needs care. We say so upfront.">
         <div className="grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <h2 className="headline text-3xl md:text-4xl">
-              Software needs care. We say so upfront.
-            </h2>
-            <p className="mt-6 max-w-[46ch] leading-relaxed text-mute">
+            <p className="max-w-[46ch] text-[17px] leading-[1.47] text-mute">
               Every engagement includes a 60-day warranty — anything we built that breaks, we fix,
               free, fast. After that, support runs on a retainer with response times we put in
               writing. The engineers who built your product answer the tickets; there is no
-              &ldquo;support tier&rdquo; of strangers.
+              “support tier” of strangers.
             </p>
-            <p className="mt-6 font-mono text-[12px] text-mute">
+            <p className="mt-6 text-[12px] text-mute">
               Support retainers from $49/mo · included in all growth retainers
             </p>
           </div>
           <div className="lg:col-span-6 lg:col-start-7">
-            <div className="border border-line">
-              <div className="grid grid-cols-3 gap-4 border-b border-line bg-tone-2 p-4">
+            <div className="tile overflow-hidden">
+              <div className="grid grid-cols-3 gap-4 border-b border-line bg-tone p-5">
                 <MonoLabel as="h3">Severity</MonoLabel>
                 <MonoLabel as="h3">First response</MonoLabel>
                 <MonoLabel as="h3">Target resolution</MonoLabel>
               </div>
               {slas.map((sla) => (
-                <div key={sla.severity} className="grid grid-cols-3 gap-4 border-b border-line p-4 last:border-b-0">
-                  <p className="text-sm font-medium">{sla.severity}</p>
-                  <p className="text-sm text-accent">{sla.response}</p>
-                  <p className="text-sm text-mute">{sla.resolution}</p>
+                <div key={sla.severity} className="grid grid-cols-3 gap-4 border-b border-line p-5 last:border-b-0">
+                  <p className="text-[15px] font-semibold">{sla.severity}</p>
+                  <p className="text-[15px] text-link">{sla.response}</p>
+                  <p className="text-[15px] text-mute">{sla.resolution}</p>
                 </div>
               ))}
             </div>
-            <p className="mt-4 font-mono text-[12px] leading-relaxed text-mute">
-              Measured from your message, not from when we &ldquo;triage&rdquo; it. Misses are
-              credited without being asked.
+            <p className="mt-4 text-[12px] leading-relaxed text-mute">
+              Measured from your message, not from when we “triage” it. Misses are credited without
+              being asked.
             </p>
           </div>
         </div>
       </Section>
 
       {/* Who does the work */}
-      <Section tone="paper" index="04" eyebrow="Who does the work">
-        <div className="grid gap-10 lg:grid-cols-12">
-          <Reveal className="lg:col-span-8">
-            <p className="headline text-3xl leading-[1.15] md:text-4xl">
-              The team you meet in the first call is the team that ships. No handoff to a
-              &ldquo;delivery office,&rdquo; no rotating cast, no offshore bait-and-switch.
-            </p>
-          </Reveal>
-          <Reveal delay={0.1} className="flex flex-col justify-end gap-6 lg:col-span-3 lg:col-start-10">
-            <p className="text-mute">
-              Six senior people, one standard.{" "}
-              <Link href="/about" className="u-link text-fg">
-                Meet them
-              </Link>
-              .
-            </p>
-            <div>
-              <Button href="/contact">Start a project</Button>
-            </div>
-          </Reveal>
-        </div>
+      <Section tone="paper" containerClassName="max-w-[1036px]">
+        <ScrollText
+          as="h2"
+          className="headline text-[32px] md:text-[44px] lg:text-[48px]"
+          text="The team you meet in the first call is the team that ships. No handoff to a delivery office, no rotating cast, no offshore bait-and-switch."
+        />
+        <Reveal delay={0.1} className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
+          <Button href="/contact" size="lg">
+            Start a project
+          </Button>
+          <p className="text-[17px] text-mute">
+            Six senior people, one standard.{" "}
+            <Link href="/about" className="u-link">
+              Meet them
+            </Link>
+            .
+          </p>
+        </Reveal>
       </Section>
     </>
   );

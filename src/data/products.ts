@@ -13,6 +13,8 @@ export type Product = {
   url: string;
   /** Live capture of the product's own homepage, used as the card ground. */
   screen?: string;
+  /** Phone-width capture of the same homepage, for device frames. */
+  screenMobile?: string;
 };
 
 export const products: Product[] = [
@@ -37,6 +39,7 @@ export const products: Product[] = [
     pricing: "from $149/mo · $1,500 onboarding",
     url: "https://fixorata.com/",
     screen: "/products/fixorata.jpg",
+    screenMobile: "/products/fixorata-mobile.jpg",
   },
   {
     slug: "drivorata",

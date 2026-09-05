@@ -86,3 +86,32 @@ Working notes for the autonomous build. The competitive research this build inte
   reference the real suite. Nav + footer link to /products.
 - The three case studies (Veyra/Pulseline/Ember & Oak) remain as fictional demonstration
   work samples — swap with real client stories when available.
+
+## 2026-09-05 — Visual system rebuilt on apple.com conventions
+
+User-directed: "make iamsanaan.com follow apple.com UI and UX." Researched apple.com
+directly (global nav 44px frosted at 80% white with `saturate(1.8) blur(20px)`, 12px links,
+hover flyouts over a blurred curtain; 52px sticky local nav with a small blue pill; SF Pro
+Display headlines 56–80px/600 with tight tracking; 17px body, 12px footnotes; #1d1d1f /
+#6e6e73 / #f5f5f7 / pure black tiles; blue #0071e3 pills and #0066cc links; 28px-radius tiles;
+snap galleries with 36px circular paddles; `cubic-bezier(0.4,0,0.6,1)` at 240–320ms;
+scroll-driven word highlighting; reduced-motion respected).
+
+Decisions:
+- Dropped the "Editorial Terminal" system (Fraunces, JetBrains Mono, orange #FF4D00,
+  hairline cell grids) for the neutral Apple palette with one blue. Fonts: `-apple-system`
+  first (real SF on Apple devices), Inter elsewhere. Inter Tight is retained only because
+  `/bio-data` opts into it; that page is untouched.
+- Tone system kept and remapped (`tone-ink` = black, `tone-paper` = white, new
+  `tone-gray` = #f5f5f7); `.tile` = 28px radius on the tone's secondary surface.
+- New primitives: `Eyebrow`, `Segmented` (sliding-thumb control), `Gallery` (snap +
+  paddles), `LocalNav`, `ScrollText` (word-by-word scroll reveal), `HeroScroll` (hero copy
+  recedes on scroll), `TrustRow` (replaces the marquee — apple.com has none), `ProductCard`.
+- Hero stays black with the node field, retinted white/blue; headline emphasis uses a
+  gradient word, as apple.com does.
+- The FooterCta is a black tile above an apple.com-style gray 12px directory footer; the
+  per-page "not sure?" CTA bands were removed as redundant.
+- Local-nav pages (`src/lib/localNav.ts`: /products, /services/[slug]) follow apple.com
+  exactly: the global nav is `absolute` on desktop (scrolls away) and carries no button;
+  the LocalNav is the single sticky bar with the single "Start a project" pill. On mobile
+  the global bar stays fixed for the menu button and the LocalNav sticks beneath it.

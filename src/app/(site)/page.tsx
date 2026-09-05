@@ -1,284 +1,260 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 import { site } from "@/lib/site";
-import { services } from "@/data/services";
-import { getFaqs } from "@/data/faqs";
-import { outcomesLine } from "@/data/clients";
+import { sites } from "@/data/sites";
 import { products } from "@/data/products";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
-import { MonoLabel, Tag } from "@/components/ui/MonoLabel";
+import { Eyebrow, MonoLabel } from "@/components/ui/MonoLabel";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
-import { Accordion } from "@/components/ui/Accordion";
-import { LogoMarquee } from "@/components/ui/LogoMarquee";
+import { Gallery } from "@/components/ui/Gallery";
+import { HeroScroll } from "@/components/ui/HeroScroll";
 import { HeroCanvas } from "@/components/HeroCanvas";
-import { TechStackGrid } from "@/components/sections/TechStackGrid";
-import { EngagementCards } from "@/components/sections/EngagementCards";
-import { ProcessStrip } from "@/components/sections/ProcessStrip";
+import { Laptop, Phone } from "@/components/DeviceFrame";
+import { Backdrop } from "@/components/Backdrop";
+import { SiteCard } from "@/components/SiteCard";
+import { ProductCard } from "@/components/ProductCard";
 
-const studioStats = [
-  { value: "2017", label: "operating since — same principals, same standard" },
-  { value: "60+", label: "products shipped to production" },
-  { value: "94%", label: "of revenue from repeat clients and referrals" },
+export const metadata: Metadata = {
+  title: { absolute: `${site.name} — Websites and mobile apps, built in Houston` },
+  description:
+    "We build websites and mobile apps for businesses, from $99. Fixed prices, progress you can see every week, and you own everything we make.",
+};
+
+/** The three steps a first-time visitor needs — the five-phase version lives on /process. */
+const steps = [
+  { index: "01", title: "Tell us what you need.", body: "A short form, a call, a fixed price." },
+  { index: "02", title: "We build it.", body: "You see progress every week on a live link." },
+  { index: "03", title: "It goes live.", body: "We keep it running." },
 ];
 
+function bySlug(slug: string) {
+  const found = sites.find((s) => s.slug === slug);
+  if (!found) throw new Error(`Unknown site: ${slug}`);
+  return found;
+}
+
+const host = (url: string) => new URL(url).host.replace(/^www\./, "");
+
+/** The hero shows our own product, Fixorata, on both devices. */
+function heroProduct() {
+  const found = products.find((p) => p.slug === "fixorata");
+  if (!found?.screen || !found.screenMobile) throw new Error("Fixorata needs desktop and mobile captures");
+  return { ...found, screen: found.screen, screenMobile: found.screenMobile };
+}
+
 export default function Home() {
+  const hero = heroProduct();
+  const web = bySlug("cactus-boxing");
+  const mobile = bySlug("exact-point-repairs");
+  const backdrop = bySlug("all-ages-driving-school");
+
   return (
     <>
-      {/* 01 — Hero */}
-      <section className="tone-ink relative flex min-h-svh items-center overflow-hidden">
+      {/* 01 — Hero: one sentence, then the work itself on a laptop and a phone */}
+      <section className="tone-ink relative overflow-hidden">
         <div className="absolute inset-0">
           <HeroCanvas className="absolute inset-0" />
-          {/* keep the left text column clean */}
-          <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink to-transparent" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgb(0_0_0/0)_0%,rgb(0_0_0/0.55)_80%)]" />
         </div>
+        <Container className="relative pt-32 pb-20 text-center md:pt-40 md:pb-28">
+          <HeroScroll>
+            <Reveal>
+              <Eyebrow>Houston, TX</Eyebrow>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <h1 className="headline mx-auto mt-4 max-w-[18ch] text-[44px] sm:text-[64px] md:text-[80px]">
+                We build <span className="text-gradient">websites and mobile apps.</span>
+              </h1>
+            </Reveal>
+            <Reveal delay={0.16}>
+              <p className="mx-auto mt-6 max-w-[40ch] text-[19px] leading-[1.4] text-mute md:text-[24px]">
+                Clean, fast, and made to bring you customers.
+              </p>
+            </Reveal>
+            <Reveal delay={0.24} className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+              <Button href="/contact" size="lg">
+                Start a project
+              </Button>
+              <Button href="#work" variant="text" size="lg">
+                See our work
+              </Button>
+            </Reveal>
+          </HeroScroll>
 
-        <Container className="relative pt-32 pb-24 md:pt-36">
-          <Reveal>
-            <MonoLabel>
-              Digital product &amp; growth studio — {site.address.split(",").slice(-2).join(",").trim()}
-            </MonoLabel>
+          {/* The devices sit outside HeroScroll so they stay put while the copy recedes */}
+          <Reveal delay={0.3} className="relative mx-auto mt-14 w-full max-w-[880px] md:mt-20">
+            <Laptop
+              src={hero.screen}
+              alt={`${hero.name} on a laptop`}
+              priority
+              sizes="(min-width: 1024px) 880px, 92vw"
+            />
+            <div className="absolute -right-[2%] -bottom-[4%] w-[26%] sm:-right-[6%] sm:w-[24%]">
+              <Phone
+                src={hero.screenMobile}
+                alt={`${hero.name} on a phone`}
+                priority
+                sizes="(min-width: 1024px) 210px, 26vw"
+              />
+            </div>
           </Reveal>
-          <Reveal delay={0.08}>
-            <h1 className="headline mt-6 max-w-[13ch] text-[13vw] sm:text-6xl md:text-7xl lg:text-8xl">
-              Digital products that generate{" "}
-              <em className="text-accent not-italic md:italic">pipeline.</em>
-            </h1>
-          </Reveal>
-          <Reveal delay={0.16}>
-            <p className="mt-8 max-w-[52ch] text-lg leading-relaxed text-mute md:text-xl">
-              We design and build web platforms, mobile apps, and the growth engines behind them —
-              for companies whose next launch can&apos;t afford to miss.
-            </p>
-          </Reveal>
-          <Reveal delay={0.24} className="mt-10 flex flex-wrap items-center gap-4">
-            <Button href="/contact" size="lg">
-              Start a project
-            </Button>
-            <Button href="/products" variant="ghost" size="lg">
-              See our products
-            </Button>
-          </Reveal>
-          <Reveal delay={0.32}>
-            <p className="mt-10 font-mono text-[12px] tracking-[0.06em] text-mute">
-              Engagements from {site.anchors.projectMinimum} · MVPs in 6–12 weeks · you own everything
+          <Reveal delay={0.4}>
+            <p className="mt-14 text-[14px] text-mute md:mt-16">
+              <a href={hero.url} target="_blank" rel="noopener noreferrer" className="u-link">
+                {hero.name}
+              </a>{" "}
+              — our software for {hero.vertical.toLowerCase()}. Built and run by us.
             </p>
           </Reveal>
         </Container>
       </section>
 
-      {/* 02 — Trust marquee */}
-      <div className="tone-ink border-y border-line py-10 md:py-12">
-        <LogoMarquee />
-        <Container>
-          <p className="mt-8 text-center font-mono text-[12px] tracking-[0.06em] text-mute">
-            {outcomesLine}
-          </p>
-        </Container>
-      </div>
-
-      {/* 03 — Problem statement */}
-      <Section tone="paper" index="01" eyebrow="The gap" pad="default" seam={false}>
-        <div className="grid gap-10 lg:grid-cols-12">
-          <Reveal className="lg:col-span-9">
-            <p className="headline text-3xl leading-[1.15] sm:text-4xl md:text-5xl">
-              Your business outgrew its digital presence. Buyers notice in the first five seconds —
-              then they leave, quietly, and buy from someone who looks like they can deliver.
-            </p>
+      {/* 02 — What we build */}
+      <Section id="build" tone="paper" align="center" title="What we build." className="scroll-mt-[60px]">
+        <div className="grid gap-4 md:grid-cols-2">
+          <Reveal>
+            <Link
+              href="/services/web"
+              className="group tile flex h-full flex-col overflow-hidden p-8 transition-[transform,box-shadow] duration-500 ease-(--ease-swift) hover:-translate-y-1 hover:shadow-tile md:p-10"
+            >
+              <h3 className="flex items-center gap-1 text-[28px] font-semibold tracking-[-0.02em] transition-colors group-hover:text-link">
+                Websites
+                <ChevronRight
+                  aria-hidden
+                  className="size-5 text-mute transition-transform duration-300 group-hover:translate-x-0.5"
+                />
+              </h3>
+              <p className="mt-3 max-w-[34ch] text-[17px] leading-[1.47] text-mute">
+                Fast and clear, so people call, book, or buy.
+              </p>
+              <div className="relative mt-8 aspect-[16/11] overflow-hidden">
+                <Laptop
+                  src={web.screens.desktop}
+                  alt={`${web.name} website on a laptop`}
+                  sizes="(min-width: 768px) 44vw, 90vw"
+                  className="absolute inset-x-0 top-0"
+                />
+              </div>
+              <MonoLabel className="mt-4 block">{host(web.url)}</MonoLabel>
+            </Link>
           </Reveal>
-          <Reveal delay={0.1} className="lg:col-span-7 lg:col-start-6">
-            <p className="text-lg leading-relaxed text-mute">
-              We close that gap. Not with a prettier brochure — with a product: engineered pages
-              that load before doubt sets in, journeys that answer the questions buyers are silently
-              asking, and measurement that ties every design decision to revenue.
-            </p>
+
+          <Reveal delay={0.08}>
+            <Link
+              href="/services/mobile"
+              className="group tile flex h-full flex-col overflow-hidden p-8 transition-[transform,box-shadow] duration-500 ease-(--ease-swift) hover:-translate-y-1 hover:shadow-tile md:p-10"
+            >
+              <h3 className="flex items-center gap-1 text-[28px] font-semibold tracking-[-0.02em] transition-colors group-hover:text-link">
+                Mobile apps
+                <ChevronRight
+                  aria-hidden
+                  className="size-5 text-mute transition-transform duration-300 group-hover:translate-x-0.5"
+                />
+              </h3>
+              <p className="mt-3 max-w-[34ch] text-[17px] leading-[1.47] text-mute">
+                For iPhone and Android. Every site we build works on a phone, too.
+              </p>
+              <div className="relative mt-8 aspect-[16/11] overflow-hidden">
+                <Phone
+                  src={mobile.screens.mobile}
+                  alt={`${mobile.name} website on a phone`}
+                  sizes="(min-width: 768px) 260px, 50vw"
+                  className="absolute top-0 left-1/2 w-[52%] max-w-[260px] -translate-x-1/2"
+                />
+              </div>
+              <MonoLabel className="mt-4 block">{host(mobile.url)}</MonoLabel>
+            </Link>
           </Reveal>
         </div>
-      </Section>
 
-      {/* 04 — Capabilities */}
-      <Section tone="paper" index="02" eyebrow="Capabilities" pad="default">
-        <div className="mb-14 grid gap-6 md:grid-cols-12 md:items-end">
-          <h2 className="headline text-4xl md:col-span-7 md:text-5xl">
-            Three disciplines. One standard.
-          </h2>
-          <p className="text-mute md:col-span-4 md:col-start-9">
-            We build, and we grow what we build. Nothing we wouldn&apos;t stake our own revenue on.
-          </p>
-        </div>
-
-        <div className="border-t border-line">
-          {services.map((service) => (
-            <Reveal key={service.slug}>
-              <Link
-                href={`/services/${service.slug}`}
-                className="group grid items-baseline gap-3 border-b border-line py-8 transition-colors duration-500 hover:bg-tone-2 md:grid-cols-12 md:gap-6 md:py-10"
-              >
-                <div className="flex items-baseline gap-6 md:col-span-5">
-                  <span className="font-mono text-[13px] text-accent">{service.index}</span>
-                  <span className="headline text-3xl transition-colors duration-300 group-hover:text-accent md:text-4xl">
-                    {service.name}
-                  </span>
-                </div>
-                <p className="pl-12 text-[15px] leading-snug text-mute md:col-span-4 md:pl-0">
-                  {service.outcome}
-                </p>
-                <div className="hidden flex-wrap justify-end gap-2 md:col-span-3 md:flex">
-                  {service.tags.slice(0, 3).map((t) => (
-                    <Tag key={t}>{t}</Tag>
-                  ))}
-                </div>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-
-        <div className="mt-8 flex justify-end">
-          <Button href="/services" variant="text">
-            All services
-          </Button>
-        </div>
-      </Section>
-
-      {/* 05 — Our own products */}
-      <Section tone="ink" index="03" eyebrow="Our own products">
-        <div className="mb-14 grid gap-6 md:grid-cols-12 md:items-end">
-          <h2 className="headline text-4xl md:col-span-7 md:text-5xl">
-            We eat our own cooking.
-          </h2>
-          <p className="text-mute md:col-span-4 md:col-start-9">
-            Five vertical SaaS products, built and operated in-house on our Plaidware platform —
-            live, billing, and answered for every month.
-          </p>
-        </div>
-
-        <div className="border-t border-line">
-          {products.map((product, i) => (
-            <Reveal key={product.slug}>
-              <a
-                href={product.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group grid items-baseline gap-2 border-b border-line py-6 transition-colors duration-500 hover:bg-tone-2 md:grid-cols-12 md:gap-6 md:py-7"
-              >
-                <div className="flex items-baseline gap-6 md:col-span-4">
-                  <span className="font-mono text-[13px] text-accent">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="headline text-2xl transition-colors duration-300 group-hover:text-accent md:text-3xl">
-                    {product.name}
-                  </span>
-                </div>
-                <p className="pl-12 text-[15px] leading-snug text-mute md:col-span-5 md:pl-0">
-                  {product.tagline}
-                </p>
-                <div className="hidden justify-end md:col-span-3 md:flex">
-                  <Tag>{product.vertical}</Tag>
-                </div>
-              </a>
-            </Reveal>
-          ))}
-        </div>
-
-        <div className="mt-8 flex justify-end">
-          <Button href="/products" variant="text">
-            About the products
-          </Button>
-        </div>
-      </Section>
-
-      {/* 06 — Process strip */}
-      <Section tone="paper" index="04" eyebrow="How we work">
-        <div className="mb-14 grid gap-6 md:grid-cols-12 md:items-end">
-          <h2 className="headline text-4xl md:col-span-7 md:text-5xl">
-            A factory floor, not a black box.
-          </h2>
-          <p className="text-mute md:col-span-4 md:col-start-9">
-            Five phases, weekly demos, and a staging URL that gets better every Friday.
-          </p>
-        </div>
-        <ProcessStrip />
-      </Section>
-
-      {/* 07 — Tech stack */}
-      <Section tone="ink" index="05" eyebrow="Stack">
-        <div className="mb-14 grid gap-6 md:grid-cols-12 md:items-end">
-          <h2 className="headline text-4xl md:col-span-8 md:text-5xl">
-            Boring technology, deliberately.
-          </h2>
-          <p className="text-mute md:col-span-4 md:col-start-9">
-            Chosen so you can hire for it, audit it, and inherit it.
-          </p>
-        </div>
-        <TechStackGrid />
-      </Section>
-
-      {/* 08 — Studio stats */}
-      <Section tone="paper" index="06" eyebrow="Working with us">
-        <div className="grid gap-10 border-t border-line pt-10 md:grid-cols-3">
-          {studioStats.map((stat, i) => (
-            <Reveal key={stat.value} delay={i * 0.08}>
-              <p className="font-display text-5xl tracking-tight">{stat.value}</p>
-              <p className="mt-2 max-w-[28ch] text-sm text-mute">{stat.label}</p>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
-      {/* 09 — Engagement models */}
-      <Section tone="paper" index="07" eyebrow="How to hire us">
-        <div className="mb-14 grid gap-6 md:grid-cols-12 md:items-end">
-          <h2 className="headline text-4xl md:col-span-7 md:text-5xl">
-            Three ways to buy. No mystery meat.
-          </h2>
-          <p className="text-mute md:col-span-4 md:col-start-9">
-            Pick the shape of the relationship first — the scope conversation gets easy after that.
-          </p>
-        </div>
-        <EngagementCards />
-        <p className="mt-8 font-mono text-[12px] leading-relaxed text-mute">
-          Agencies: we also take senior overflow work, white-label, under NDA.{" "}
-          <Link href="/pricing" className="u-link text-fg">
-            Details on the pricing page
+        <p className="mt-10 text-center text-[17px] text-mute">
+          <Link href="/services/growth" className="u-link">
+            And the marketing to get them found.
           </Link>
-          .
         </p>
       </Section>
 
-      {/* 10 — Objection FAQ + final CTA */}
-      <Section tone="ink" index="08" eyebrow="Before you ask">
-        <div className="grid gap-14 lg:grid-cols-12">
-          <div className="lg:col-span-5">
-            <h2 className="headline text-4xl md:text-5xl">
-              The questions you&apos;re actually asking.
-            </h2>
-            <p className="mt-6 max-w-[44ch] leading-relaxed text-mute">
-              Ownership, budgets, who really does the work. If we haven&apos;t answered yours,{" "}
-              <a href={`mailto:${site.email}`} className="u-link text-fg">
-                ask it directly
-              </a>{" "}
-              — you&apos;ll get a straight answer within {site.anchors.responseTime}.
-            </p>
-            <div className="mt-10 hidden lg:block">
-              <Button href="/contact" size="lg">
-                Start a project
-              </Button>
-              <p className="mt-4 font-mono text-[12px] text-mute">
-                Engagements start at {site.anchors.projectMinimum}
-              </p>
-            </div>
-          </div>
-          <div className="lg:col-span-7">
-            <Accordion items={getFaqs(["ownership", "team", "budget", "timeline"])} />
-            <div className="mt-10 lg:hidden">
-              <Button href="/contact" size="lg" className="w-full sm:w-auto">
-                Start a project
-              </Button>
-            </div>
-          </div>
+      {/* 03 — Our work */}
+      <Section id="work" tone="gray" title="Our work." className="scroll-mt-[60px]">
+        <Eyebrow as="h3">Websites for clients</Eyebrow>
+        <Gallery label="Websites for clients" className="mt-6" itemClassName="w-[min(560px,88vw)]">
+          {sites.map((s) => (
+            <SiteCard key={s.slug} site={s} />
+          ))}
+        </Gallery>
+
+        <Eyebrow as="h3" className="mt-16 md:mt-20">
+          Products we run
+        </Eyebrow>
+        <Gallery label="Products we run" className="mt-6" itemClassName="w-[min(372px,85vw)]">
+          {products.map((p) => (
+            <ProductCard key={p.slug} product={p} />
+          ))}
+        </Gallery>
+        <div className="mt-2">
+          <Button href="/products" variant="text" size="lg">
+            All products
+          </Button>
         </div>
       </Section>
+
+      {/* 04 — How it works, over a blurred capture */}
+      <section id="how" className="tone-ink relative scroll-mt-[60px] overflow-hidden py-20 md:py-28 lg:py-36">
+        <Backdrop src={backdrop.screens.desktop} />
+        <Container className="relative">
+          <header className="mb-12 max-w-[900px] md:mb-16">
+            <h2 className="headline text-[36px] sm:text-[44px] md:text-[56px]">How it works.</h2>
+          </header>
+          <div className="grid gap-4 md:grid-cols-3">
+            {steps.map((step, i) => (
+              <Reveal
+                key={step.index}
+                delay={i * 0.08}
+                className="rounded-tile border border-white/10 bg-white/[0.06] p-8 backdrop-blur-md md:p-10"
+              >
+                <p className="text-gradient text-[40px] leading-none font-semibold tracking-[-0.03em]">
+                  {step.index}
+                </p>
+                <h3 className="mt-6 text-[24px] font-semibold tracking-[-0.02em]">{step.title}</h3>
+                <p className="mt-3 text-[17px] leading-[1.47] text-white/70">{step.body}</p>
+              </Reveal>
+            ))}
+          </div>
+          <div className="mt-10">
+            <Button href="/process" variant="text" size="lg">
+              Full process
+            </Button>
+          </div>
+        </Container>
+      </section>
+
+      {/* 05 — Pricing */}
+      <Section
+        id="pricing"
+        tone="paper"
+        align="center"
+        containerClassName="max-w-[1036px]"
+        className="scroll-mt-[60px]"
+      >
+        <Reveal className="text-center">
+          <p className="headline text-gradient text-[72px] leading-none md:text-[120px]">
+            From {site.anchors.projectMinimum}.
+          </p>
+          <p className="mx-auto mt-6 max-w-[36ch] text-[19px] leading-[1.4] text-mute md:text-[21px]">
+            Fixed price up front. You own everything we make.
+          </p>
+          <div className="mt-6">
+            <Button href="/pricing" variant="text" size="lg">
+              See pricing
+            </Button>
+          </div>
+        </Reveal>
+      </Section>
+
+      {/* 06 — Contact: the global FooterCta that follows every page */}
     </>
   );
 }

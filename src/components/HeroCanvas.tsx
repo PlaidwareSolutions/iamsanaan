@@ -85,8 +85,8 @@ export function HeroCanvas({ className }: { className?: string }) {
           const n = nodes[r][c];
           const p = posAt(n, t);
           const xp = Math.min(Math.max(n.gx / width, 0), 1);
-          const lineAlpha = 0.03 + xp * 0.05;
-          ctx.strokeStyle = `rgba(237, 234, 225, ${lineAlpha})`;
+          const lineAlpha = 0.05 + xp * 0.09;
+          ctx.strokeStyle = `rgba(255, 255, 255, ${lineAlpha})`;
           ctx.lineWidth = 1;
 
           if (c + 1 < cols) {
@@ -113,12 +113,12 @@ export function HeroCanvas({ className }: { className?: string }) {
           const p = posAt(n, t);
           const xp = Math.min(Math.max(n.gx / width, 0), 1);
           if (n.accent) {
-            ctx.fillStyle = "rgba(255, 77, 0, 0.85)";
+            ctx.fillStyle = "rgba(41, 151, 255, 0.9)";
             ctx.beginPath();
             ctx.arc(p.x, p.y, 2.4, 0, Math.PI * 2);
             ctx.fill();
           } else {
-            ctx.fillStyle = `rgba(237, 234, 225, ${0.08 + xp * 0.16})`;
+            ctx.fillStyle = `rgba(255, 255, 255, ${0.14 + xp * 0.26})`;
             ctx.beginPath();
             ctx.arc(p.x, p.y, 1.4, 0, Math.PI * 2);
             ctx.fill();

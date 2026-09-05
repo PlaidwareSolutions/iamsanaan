@@ -4,8 +4,8 @@ import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 /**
- * Scroll-triggered reveal. Fades + lifts content 20px, once, honoring reduced motion.
- * Keep delays small — this is polish, not a show.
+ * Scroll-triggered reveal: fades and lifts content 24px once, on the
+ * apple.com ease-out curve. Honors reduced motion.
  */
 export function Reveal({
   children,
@@ -29,10 +29,10 @@ export function Reveal({
   return (
     <Comp
       className={cn(className)}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -80px 0px" }}
-      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+      transition={{ duration: 0.8, delay, ease: [0.25, 0.1, 0.3, 1] }}
     >
       {children}
     </Comp>
