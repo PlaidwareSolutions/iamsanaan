@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { products, platformServices, platformTagline, platformUrl } from "@/data/products";
+import { sites } from "@/data/sites";
 import { PageHeader } from "@/components/PageHeader";
 import { Section } from "@/components/ui/Section";
 import { MonoLabel, Tag } from "@/components/ui/MonoLabel";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
+import { SiteShowcase } from "@/components/SiteShowcase";
 
 export const metadata: Metadata = {
   title: "Products",
   description:
-    "Five vertical SaaS products — Buildorata, Fixorata, Drivorata, Rentorata, and PropOrata — built, shipped, and operated in-house on the Plaidware platform.",
+    "Five vertical SaaS products — Buildorata, Fixorata, Drivorata, Rentorata, and PropOrata — built and operated in-house on the Plaidware platform, plus the websites we've shipped for Houston-area businesses.",
 };
 
 export default function ProductsPage() {
@@ -31,29 +34,48 @@ export default function ProductsPage() {
                 href={product.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex h-full flex-col p-7 transition-colors duration-500 hover:bg-tone-2 md:p-9"
+                className="tone-ink group relative flex h-full min-h-[26rem] flex-col overflow-hidden bg-tone p-7 md:p-9"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <Tag>{product.vertical}</Tag>
-                  <ArrowUpRight
-                    aria-hidden
-                    className="size-5 shrink-0 text-mute transition-all duration-300 ease-(--ease-swift) group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
-                  />
+                {/* The product's own homepage, captured live, fills the top of the
+                    card and fades into the ink the copy sits on */}
+                {product.screen && (
+                  <div aria-hidden className="absolute inset-x-0 top-0 h-[46%]">
+                    <Image
+                      src={product.screen}
+                      alt=""
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                      className="object-cover object-top transition-transform duration-700 ease-(--ease-swift) group-hover:scale-[1.03]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-ink/10 via-ink/45 via-50% to-ink" />
+                  </div>
+                )}
+
+                <div className="relative flex h-full flex-col">
+                  <div className="flex items-start justify-between gap-4">
+                    <Tag className="bg-ink/70 backdrop-blur-sm">{product.vertical}</Tag>
+                    <ArrowUpRight
+                      aria-hidden
+                      className="size-5 shrink-0 text-mute transition-all duration-300 ease-(--ease-swift) group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
+                    />
+                  </div>
+                  <div className="mt-auto pt-28">
+                    <h2 className="headline text-3xl transition-colors duration-300 group-hover:text-accent">
+                      {product.name}
+                    </h2>
+                    <p className="mt-2 font-medium">{product.tagline}</p>
+                    <p className="mt-3 text-[15px] leading-relaxed text-mute">{product.description}</p>
+                    <p className="mt-6 border-t border-line pt-4 font-mono text-[12px] text-mute">
+                      <span className="text-accent">Live</span> · {product.pricing}
+                    </p>
+                  </div>
                 </div>
-                <h2 className="headline mt-6 text-3xl transition-colors duration-300 group-hover:text-accent">
-                  {product.name}
-                </h2>
-                <p className="mt-2 font-medium">{product.tagline}</p>
-                <p className="mt-3 text-[15px] leading-relaxed text-mute">{product.description}</p>
-                <p className="mt-auto border-t border-line pt-4 font-mono text-[12px] text-mute">
-                  <span className="text-accent">Live</span> · {product.pricing}
-                </p>
               </a>
             </Reveal>
           ))}
 
           {/* The platform cell */}
-          <Reveal delay={0.12} className="bg-tone-2">
+          <Reveal delay={0.12} className="tone-ink bg-tone-2">
             <div className="flex h-full flex-col p-7 md:p-9">
               <MonoLabel className="text-accent">The platform</MonoLabel>
               <h2 className="headline mt-6 text-3xl">Plaidware</h2>
@@ -76,8 +98,28 @@ export default function ProductsPage() {
         </div>
       </Section>
 
+      {/* Shipped websites — live captures, linked out */}
+      <Section tone="paper" index="02" eyebrow="Websites we've shipped">
+        <div className="mb-16 grid gap-6 md:grid-cols-12 md:items-end">
+          <h2 className="headline text-3xl md:col-span-7 md:text-4xl">
+            Live sites for real businesses.
+          </h2>
+          <p className="text-mute md:col-span-4 md:col-start-9">
+            Designed, built, and launched by us. Every screen below is captured from the live
+            site — click through and check.
+          </p>
+        </div>
+        <div className="space-y-28 md:space-y-36">
+          {sites.map((s, i) => (
+            <Reveal key={s.slug}>
+              <SiteShowcase site={s} flip={i % 2 === 1} priority={i === 0} />
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
       {/* Control plane */}
-      <Section tone="ink" index="02" eyebrow="One control plane">
+      <Section tone="ink" index="03" eyebrow="One control plane">
         <div className="mb-14 grid gap-6 md:grid-cols-12 md:items-end">
           <h2 className="headline text-3xl md:col-span-7 md:text-4xl">
             Built once, operated for everyone.
@@ -101,7 +143,7 @@ export default function ProductsPage() {
       </Section>
 
       {/* Why it matters for clients + CTA */}
-      <Section tone="paper" index="03" eyebrow="Why this matters to you">
+      <Section tone="paper" index="04" eyebrow="Why this matters to you">
         <div className="grid gap-10 lg:grid-cols-12">
           <Reveal className="lg:col-span-8">
             <p className="headline text-3xl leading-[1.15] md:text-4xl">

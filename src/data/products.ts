@@ -11,6 +11,8 @@ export type Product = {
   description: string;
   pricing: string;
   url: string;
+  /** Live capture of the product's own homepage, used as the card ground. */
+  screen?: string;
 };
 
 export const products: Product[] = [
@@ -22,7 +24,8 @@ export const products: Product[] = [
     description:
       "Project and crew management sized for small construction outfits — the jobs, the people, and the compliance paperwork in one place instead of a truck-cab notebook.",
     pricing: "from $199/mo · $2,500 onboarding",
-    url: "https://plaidware.com/products/buildorata",
+    url: "https://buildorata.com/",
+    screen: "/products/buildorata.jpg",
   },
   {
     slug: "fixorata",
@@ -32,7 +35,8 @@ export const products: Product[] = [
     description:
       "Operations software for repair shops: front-counter intake, workshop tracking, and bookkeeping working as one system.",
     pricing: "from $149/mo · $1,500 onboarding",
-    url: "https://plaidware.com/products/fixorata",
+    url: "https://fixorata.com/",
+    screen: "/products/fixorata.jpg",
   },
   {
     slug: "drivorata",
@@ -42,7 +46,8 @@ export const products: Product[] = [
     description:
       "Lesson scheduling and student administration for driving schools — instructors, vehicles, and student progress without the spreadsheet shuffle.",
     pricing: "from $129/mo · $1,200 onboarding",
-    url: "https://plaidware.com/products/drivorata",
+    url: "https://drivorata.com/",
+    screen: "/products/drivorata.jpg",
   },
   {
     slug: "rentorata",
@@ -52,7 +57,7 @@ export const products: Product[] = [
     description:
       "Streamlined property administration for landlords and managers, down to resident billing — the recurring work of rentals, automated.",
     pricing: "from $229/mo per property · $1,800 onboarding",
-    url: "https://plaidware.com/products/rentorata",
+    url: "https://rentorata.com/",
   },
   {
     slug: "proporata",
@@ -62,7 +67,8 @@ export const products: Product[] = [
     description:
       "Governance tooling for homeowners associations — board management and compliance for communities up to and beyond 100 units.",
     pricing: "from $149/mo · $5,000 onboarding",
-    url: "https://plaidware.com/products/proporata",
+    url: "https://proporata.com/",
+    screen: "/products/proporata.jpg",
   },
 ];
 
