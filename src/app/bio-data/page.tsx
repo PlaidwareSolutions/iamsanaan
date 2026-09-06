@@ -5,6 +5,7 @@ import { Amiri, Cormorant_Garamond } from "next/font/google";
 import { biodata } from "@/data/biodata";
 import { BiodataVerdict } from "@/components/BiodataVerdict";
 import { BiodataPhotos, type BiodataPhoto } from "@/components/BiodataPhotos";
+import { BiodataBeacon } from "@/components/BiodataBeacon";
 import { cn } from "@/lib/utils";
 
 const cormorant = Cormorant_Garamond({
@@ -137,7 +138,13 @@ export default function BiodataPage() {
           <span>{biodata.footer.left}</span>
           <span>{biodata.footer.right}</span>
         </footer>
+
+        <p className="mt-3 text-center text-[8px] tracking-[0.08em] text-(color:--bio-mute) print:hidden">
+          This page counts visits.
+        </p>
       </article>
+
+      <BiodataBeacon />
     </main>
   );
 }

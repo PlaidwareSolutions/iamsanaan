@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
+import { track } from "@/lib/track";
 import { cn } from "@/lib/utils";
 
 export type BiodataPhoto = { src: string; alt: string };
@@ -27,7 +28,10 @@ export function BiodataPhotos({ photos }: { photos: BiodataPhoto[] }) {
     <>
       <button
         type="button"
-        onClick={() => dialogRef.current?.showModal()}
+        onClick={() => {
+          track("photos_open");
+          dialogRef.current?.showModal();
+        }}
         className="inline-flex items-center gap-2 border border-(color:--bio-brass) px-4 py-2 text-[11px] font-semibold tracking-[0.12em] text-(color:--bio-brass) uppercase transition-colors hover:bg-(--bio-brass) hover:text-white print:hidden"
       >
         <Images aria-hidden className="size-4" />

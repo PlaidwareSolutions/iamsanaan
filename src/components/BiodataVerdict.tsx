@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import type { Biodata } from "@/data/biodata";
+import { track } from "@/lib/track";
 import { cn } from "@/lib/utils";
 
 const button =
@@ -16,6 +17,7 @@ export function BiodataVerdict({ question, hint, certificate }: Biodata["verdict
   const boxRef = useRef<HTMLDivElement>(null);
   const noRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const lastNoAt = useRef(0);
   const [spot, setSpot] = useState<{ left: number; top: number } | null>(null);
   const [line, setLine] = useState(certificate.lines[0]);
 
@@ -27,9 +29,16 @@ export function BiodataVerdict({ question, hint, certificate }: Biodata["verdict
     const maxLeft = Math.max(box.clientWidth - btn.offsetWidth - pad * 2, 0);
     const maxTop = Math.max(box.clientHeight - btn.offsetHeight - pad * 2, 0);
     setSpot({ left: pad + Math.random() * maxLeft, top: pad + Math.random() * maxTop });
+    // Count each attempt at "No", throttled so one continuous chase isn't dozens.
+    const now = Date.now();
+    if (now - lastNoAt.current > 400) {
+      lastNoAt.current = now;
+      track("no_attempt");
+    }
   };
 
   const celebrate = () => {
+    track("yes");
     setLine(certificate.lines[Math.floor(Math.random() * certificate.lines.length)]);
     dialogRef.current?.showModal();
   };
