@@ -1,5 +1,6 @@
 import { NavBar } from "./NavBar";
 import { Footer } from "./Footer";
+import { SiteBeacon } from "./SiteBeacon";
 
 /** The agency shell. Routes outside the (site) group — e.g. /bio-data — opt out by not using it. */
 export function SiteChrome({ children }: { children: React.ReactNode }) {
@@ -14,6 +15,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       <NavBar />
       <main id="main">{children}</main>
       <Footer />
+      <SiteBeacon />
     </>
   );
 }

@@ -29,7 +29,7 @@ export function BiodataPhotos({ photos }: { photos: BiodataPhoto[] }) {
       <button
         type="button"
         onClick={() => {
-          track("photos_open");
+          track("photos_open", "bio");
           dialogRef.current?.showModal();
         }}
         className="inline-flex items-center gap-2 border border-(color:--bio-brass) px-4 py-2 text-[11px] font-semibold tracking-[0.12em] text-(color:--bio-brass) uppercase transition-colors hover:bg-(--bio-brass) hover:text-white print:hidden"

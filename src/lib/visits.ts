@@ -6,6 +6,8 @@ export type TrackEvent = {
   t: string;
   event: string;
   visitId: string | null;
+  scope?: string | null;
+  page?: string | null;
   server: { country: string | null };
 };
 
@@ -31,6 +33,10 @@ export async function readEvents(): Promise<TrackEvent[]> {
     return [];
   }
 }
+
+/** Events with no scope are legacy bio-data events (only that existed before). */
+export const isSite = (e: TrackEvent) => e.scope === "site";
+export const isBio = (e: TrackEvent) => e.scope !== "site";
 
 /** Sortable YYYY-MM-DD day key for an ISO timestamp, in the dashboard tz. */
 function dayKey(iso: string): string {
@@ -63,7 +69,7 @@ export function stamp(iso: string): string {
 
 export type Totals = { visits: number; unique: number; no: number; yes: number; photos: number };
 
-/** All-time counts across every event. */
+/** All-time counts across the given events. */
 export function overall(events: TrackEvent[]): Totals {
   const views = events.filter((e) => e.event === "view");
   return {
@@ -101,14 +107,24 @@ export function perDay(events: TrackEvent[]): DayRow[] {
     }));
 }
 
-export type CountryRow = { country: string; visits: number };
+export type CountRow = { label: string; visits: number };
 
 /** Visits per country, most first. Country only — no city or coordinates. */
-export function perCountry(events: TrackEvent[]): CountryRow[] {
+export function perCountry(events: TrackEvent[]): CountRow[] {
   const map = new Map<string, number>();
   for (const e of events.filter((e) => e.event === "view")) {
     const c = e.server?.country ?? "unknown";
     map.set(c, (map.get(c) ?? 0) + 1);
   }
-  return [...map.entries()].sort((a, b) => b[1] - a[1]).map(([country, visits]) => ({ country, visits }));
+  return [...map.entries()].sort((a, b) => b[1] - a[1]).map(([label, visits]) => ({ label, visits }));
+}
+
+/** Page views per path, most first. Site only. */
+export function topPages(events: TrackEvent[]): CountRow[] {
+  const map = new Map<string, number>();
+  for (const e of events.filter((e) => e.event === "view")) {
+    const p = e.page ?? "/";
+    map.set(p, (map.get(p) ?? 0) + 1);
+  }
+  return [...map.entries()].sort((a, b) => b[1] - a[1]).map(([label, visits]) => ({ label, visits }));
 }

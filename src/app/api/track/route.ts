@@ -23,6 +23,8 @@ export async function POST(req: Request) {
   let body: {
     event?: string;
     visitId?: string | null;
+    scope?: string | null;
+    page?: string | null;
   } = {};
   try {
     body = await req.json();
@@ -38,6 +40,11 @@ export async function POST(req: Request) {
     t: new Date().toISOString(),
     event: body.event ?? "unknown",
     visitId: body.visitId ?? null,
+    // "site" = marketing pages, "bio" = the bio-data page. Kept separate so
+    // the dashboard never conflates the two.
+    scope: body.scope === "site" ? "site" : "bio",
+    // Only stored for site views, so top-pages works. Bio is a single page.
+    page: body.scope === "site" && typeof body.page === "string" ? body.page : null,
     server: {
       country: pick(h, "cf-ipcountry", "x-vercel-ip-country"),
     },

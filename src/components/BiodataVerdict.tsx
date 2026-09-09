@@ -33,12 +33,12 @@ export function BiodataVerdict({ question, hint, certificate }: Biodata["verdict
     const now = Date.now();
     if (now - lastNoAt.current > 400) {
       lastNoAt.current = now;
-      track("no_attempt");
+      track("no_attempt", "bio");
     }
   };
 
   const celebrate = () => {
-    track("yes");
+    track("yes", "bio");
     setLine(certificate.lines[Math.floor(Math.random() * certificate.lines.length)]);
     dialogRef.current?.showModal();
   };
