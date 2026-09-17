@@ -8,7 +8,7 @@ export type TrackEvent = {
   visitId: string | null;
   scope?: string | null;
   page?: string | null;
-  server: { country: string | null };
+  server: { country: string | null; device?: string | null };
 };
 
 /** Time zone the dashboard groups and prints days in (Houston). */
@@ -67,7 +67,22 @@ export function stamp(iso: string): string {
   }).format(new Date(iso));
 }
 
-export type Totals = { visits: number; unique: number; no: number; yes: number; photos: number };
+export type Totals = {
+  visits: number;
+  unique: number;
+  no: number;
+  yes: number;
+  photos: number;
+  desktop: number;
+  mobile: number;
+};
+
+/** Device class of a view, normalised. Events written before device tracking
+ * existed have none, so they fall into "unknown" rather than skewing either side. */
+export function deviceOf(e: TrackEvent): "desktop" | "mobile" | "unknown" {
+  const d = e.server?.device;
+  return d === "desktop" || d === "mobile" ? d : "unknown";
+}
 
 /** All-time counts across the given events. */
 export function overall(events: TrackEvent[]): Totals {
@@ -78,6 +93,8 @@ export function overall(events: TrackEvent[]): Totals {
     no: events.filter((e) => e.event === "no_attempt").length,
     yes: events.filter((e) => e.event === "yes").length,
     photos: events.filter((e) => e.event === "photos_open").length,
+    desktop: views.filter((e) => deviceOf(e) === "desktop").length,
+    mobile: views.filter((e) => deviceOf(e) === "mobile").length,
   };
 }
 
@@ -104,6 +121,8 @@ export function perDay(events: TrackEvent[]): DayRow[] {
       no: v.no,
       yes: v.yes,
       photos: v.photos,
+      desktop: v.views.filter((e) => deviceOf(e) === "desktop").length,
+      mobile: v.views.filter((e) => deviceOf(e) === "mobile").length,
     }));
 }
 
@@ -115,6 +134,16 @@ export function perCountry(events: TrackEvent[]): CountRow[] {
   for (const e of events.filter((e) => e.event === "view")) {
     const c = e.server?.country ?? "unknown";
     map.set(c, (map.get(c) ?? 0) + 1);
+  }
+  return [...map.entries()].sort((a, b) => b[1] - a[1]).map(([label, visits]) => ({ label, visits }));
+}
+
+/** Views per device class, most first. Desktop vs mobile only. */
+export function perDevice(events: TrackEvent[]): CountRow[] {
+  const map = new Map<string, number>();
+  for (const e of events.filter((e) => e.event === "view")) {
+    const d = deviceOf(e);
+    map.set(d, (map.get(d) ?? 0) + 1);
   }
   return [...map.entries()].sort((a, b) => b[1] - a[1]).map(([label, visits]) => ({ label, visits }));
 }

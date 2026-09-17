@@ -4,8 +4,9 @@
  * Minimal client tracker. Sends an event name, a random per-tab visit id
  * (so repeat events in one visit aren't double-counted), a scope that keeps
  * the marketing site and the bio-data page separate, and for site views the
- * page path. Country is derived server-side. No device, precise location, or
- * fingerprint data is collected — the dashboard is aggregate by design.
+ * page path. Country and a coarse device class (computer vs mobile) are
+ * derived server-side from the request headers. No precise location, raw
+ * user-agent, or fingerprint is stored — the dashboard is aggregate by design.
  */
 
 export type Scope = "site" | "bio";

@@ -7,6 +7,7 @@ import {
   overall,
   perDay,
   perCountry,
+  perDevice,
   topPages,
   stamp,
   type CountRow,
@@ -59,9 +60,12 @@ export default async function VisitsPage({
           <div className="flex flex-wrap gap-8 border-y border-[#26262a] py-5">
             <Stat label="Page views" value={siteTotals.visits} />
             <Stat label="Unique visitors" value={siteTotals.unique} />
+            <Stat label="On computer" value={siteTotals.desktop} />
+            <Stat label="On mobile" value={siteTotals.mobile} />
           </div>
           <CountTable heading="Top pages" col="Page" rows={topPages(site)} />
-          <DayTable rows={perDay(site)} columns={["visits", "unique"]} />
+          <DayTable rows={perDay(site)} columns={["visits", "unique", "desktop", "mobile"]} />
+          <CountTable heading="By device" col="Device" rows={perDevice(site)} />
           <CountTable heading="By country" col="Country" rows={perCountry(site)} />
         </Section>
 
@@ -70,11 +74,17 @@ export default async function VisitsPage({
           <div className="flex flex-wrap gap-8 border-y border-[#26262a] py-5">
             <Stat label="Visits" value={bioTotals.visits} />
             <Stat label="Unique visitors" value={bioTotals.unique} />
+            <Stat label="On computer" value={bioTotals.desktop} />
+            <Stat label="On mobile" value={bioTotals.mobile} />
             <Stat label="“No” attempts" value={bioTotals.no} />
             <Stat label="“Yes”" value={bioTotals.yes} />
             <Stat label="Photos opened" value={bioTotals.photos} />
           </div>
-          <DayTable rows={perDay(bio)} columns={["visits", "unique", "no", "yes", "photos"]} />
+          <DayTable
+            rows={perDay(bio)}
+            columns={["visits", "unique", "desktop", "mobile", "no", "yes", "photos"]}
+          />
+          <CountTable heading="By device" col="Device" rows={perDevice(bio)} />
           <CountTable heading="By country" col="Country" rows={perCountry(bio)} />
         </Section>
       </div>
@@ -124,6 +134,8 @@ const td = "px-3 py-2";
 const DAY_HEADS: Record<string, string> = {
   visits: "Visits",
   unique: "Unique",
+  desktop: "Computer",
+  mobile: "Mobile",
   no: "“No”",
   yes: "“Yes”",
   photos: "Photos",
