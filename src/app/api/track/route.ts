@@ -14,24 +14,6 @@ function pick(h: Headers, ...names: string[]): string | null {
 }
 
 /**
- * Coarse device class from the request headers. Prefers the client hint
- * (sent by Chromium browsers), falls back to the user-agent string. Only
- * "mobile" vs "desktop" is kept — no model, OS version, or fingerprint.
- * Tablets count as mobile; anything unrecognisable stays unknown.
- */
-function deviceClass(h: Headers): "mobile" | "desktop" | null {
-  const hint = h.get("sec-ch-ua-mobile");
-  if (hint === "?1") return "mobile";
-  if (hint === "?0") return "desktop";
-
-  const ua = h.get("user-agent");
-  if (!ua) return null;
-  return /Mobi|Android|iPhone|iPad|iPod|Tablet|Silk|Kindle|Opera Mini|IEMobile|Windows Phone/i.test(ua)
-    ? "mobile"
-    : "desktop";
-}
-
-/**
  * Receives a tracking event, enriches it with what the request itself
  * reveals (IP, geo, user-agent), and appends it to .data/events.ndjson.
  * Geo headers are populated by Cloudflare in production; on localhost the
@@ -52,9 +34,8 @@ export async function POST(req: Request) {
 
   const h = req.headers;
 
-  // Country and computer-vs-mobile only. No city, no coordinates, no raw IP,
-  // no raw user-agent, no per-person link code — this dashboard is aggregate
-  // by design and stores nothing finer.
+  // Country only. No city, no coordinates, no raw IP, no per-person link
+  // code — this dashboard is aggregate by design and stores nothing finer.
   const record = {
     t: new Date().toISOString(),
     event: body.event ?? "unknown",
@@ -66,8 +47,6 @@ export async function POST(req: Request) {
     page: body.scope === "site" && typeof body.page === "string" ? body.page : null,
     server: {
       country: pick(h, "cf-ipcountry", "x-vercel-ip-country"),
-      // Coarse class only: "mobile" or "desktop", never the raw user-agent.
-      device: deviceClass(h),
     },
   };
 
