@@ -1,5 +1,6 @@
 import { appendFile, mkdir } from "node:fs/promises";
 import path from "node:path";
+import { eventsFile } from "@/lib/visits";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -51,9 +52,9 @@ export async function POST(req: Request) {
   };
 
   try {
-    const dir = path.join(process.cwd(), ".data");
-    await mkdir(dir, { recursive: true });
-    await appendFile(path.join(dir, "events.ndjson"), JSON.stringify(record) + "\n");
+    const file = eventsFile();
+    await mkdir(path.dirname(file), { recursive: true });
+    await appendFile(file, JSON.stringify(record) + "\n");
   } catch {
     /* storage failure must not surface to the visitor */
   }

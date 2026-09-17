@@ -14,10 +14,26 @@ export type TrackEvent = {
 /** Time zone the dashboard groups and prints days in (Houston). */
 export const TZ = "America/Chicago";
 
+/**
+ * Absolute path of the event log.
+ *
+ * Production runs on Railway, where each deploy gets a fresh container and an
+ * empty filesystem — anything written under the working directory is lost on
+ * the next deploy. Setting VISITS_DIR to a mounted volume (e.g. /data) keeps
+ * the log across deploys. Unset, it falls back to .data in the working
+ * directory, which is what local development wants.
+ *
+ * Both the writer (/api/track) and the reader (the dashboard) resolve the path
+ * through here, so they cannot disagree about where the data is.
+ */
+export function eventsFile(): string {
+  const dir = process.env.VISITS_DIR?.trim() || path.join(process.cwd(), ".data");
+  return path.join(dir, "events.ndjson");
+}
+
 export async function readEvents(): Promise<TrackEvent[]> {
   try {
-    const file = path.join(process.cwd(), ".data", "events.ndjson");
-    const raw = await readFile(file, "utf8");
+    const raw = await readFile(eventsFile(), "utf8");
     return raw
       .split("\n")
       .filter(Boolean)

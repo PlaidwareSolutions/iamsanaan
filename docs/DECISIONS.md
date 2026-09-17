@@ -115,3 +115,20 @@ Decisions:
   exactly: the global nav is `absolute` on desktop (scrolls away) and carries no button;
   the LocalNav is the single sticky bar with the single "Start a project" pill. On mobile
   the global bar stays fixed for the menu button and the LocalNav sticks beneath it.
+
+## Visit data storage
+
+The visit log is an append-only NDJSON file, not a database. Production runs on Railway,
+where every deploy starts a fresh container with an empty filesystem, so a file written
+under the working directory is discarded on the next deploy — which is exactly what
+happened to the first batch of collected data.
+
+`eventsFile()` in `src/lib/visits.ts` is now the single place the path is resolved, for
+both the writer (`/api/track`) and the dashboard reader. It honours `VISITS_DIR`, which in
+production points at a mounted Railway volume; unset, it falls back to `.data/` in the
+working directory for local development.
+
+Two caveats this design keeps: the file is never committed (`.data/` is gitignored, and the
+data has never existed in git, so no deploy or rollback can restore it), and the counts
+assume a single instance — scaling the service past one container would split the log
+across filesystems. Moving to Postgres is the fix if that day comes.
