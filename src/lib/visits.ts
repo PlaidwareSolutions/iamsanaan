@@ -135,6 +135,59 @@ export function perCountry(events: TrackEvent[]): CountRow[] {
   return [...map.entries()].sort((a, b) => b[1] - a[1]).map(([label, visits]) => ({ label, visits }));
 }
 
+/** "YYYY-MM-DD" key one day after the given key. */
+function nextDayKey(key: string): string {
+  const [y, m, d] = key.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d + 1)).toISOString().slice(0, 10);
+}
+
+/** Day key of the earliest event, or null when there are none. */
+export function firstDayKey(events: TrackEvent[]): string | null {
+  let first: string | null = null;
+  for (const e of events) {
+    const k = dayKey(e.t);
+    if (first === null || k < first) first = k;
+  }
+  return first;
+}
+
+export type SeriesDay = { key: string; label: string; date: string } & Totals;
+
+/**
+ * One entry per calendar day from `fromKey` through today, oldest first, with
+ * empty days filled in as zeros. Feeds the bar charts; perDay() still lists
+ * only the days that had activity.
+ */
+export function dailySeries(events: TrackEvent[], fromKey: string): SeriesDay[] {
+  const byDay = new Map<string, TrackEvent[]>();
+  for (const e of events) {
+    const k = dayKey(e.t);
+    const list = byDay.get(k);
+    if (list) list.push(e);
+    else byDay.set(k, [e]);
+  }
+  const today = dayKey(new Date().toISOString());
+  const out: SeriesDay[] = [];
+  for (let k = fromKey; k <= today; k = nextDayKey(k)) {
+    const [, m, d] = k.split("-");
+    out.push({ key: k, label: `${m}/${d}`, date: toDisplayDate(k), ...overall(byDay.get(k) ?? []) });
+  }
+  return out;
+}
+
+export type FunnelStep = { label: string; visitors: number };
+
+/** How many distinct visitors reached each step of the bio-data page. */
+export function bioFunnel(events: TrackEvent[]): FunnelStep[] {
+  const who = (event: string) => new Set(events.filter((e) => e.event === event).map((e) => e.visitId)).size;
+  return [
+    { label: "Opened the page", visitors: who("view") },
+    { label: "Opened photos", visitors: who("photos_open") },
+    { label: "Tried “No”", visitors: who("no_attempt") },
+    { label: "Said “Yes”", visitors: who("yes") },
+  ];
+}
+
 /** Page views per path, most first. Site only. */
 export function topPages(events: TrackEvent[]): CountRow[] {
   const map = new Map<string, number>();
