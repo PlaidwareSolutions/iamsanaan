@@ -18,6 +18,7 @@ import {
   citiesSince,
   visitorNumbers,
   visitors,
+  ipOwners,
   returning,
   stamp,
   type Visitor,
@@ -26,6 +27,7 @@ import {
   type SeriesDay,
   type TrackEvent,
 } from "@/lib/visits";
+import { networkNames } from "@/lib/networks";
 import { Expandable } from "./Expandable";
 
 export const runtime = "nodejs";
@@ -55,9 +57,10 @@ const EMPTY_BAR = "#2a2a30";
  * the VISITS_KEY env var; otherwise it 404s. Two clearly separated sections,
  * the marketing site (iamsanaan.com) and the private bio-data page, stacked
  * on one page. Totals are all-time; the daily charts cover the last
- * CHART_DAYS days. Visitors appear only as anonymous per-browser numbers
- * with approximate, IP-derived locations; nothing names anyone. This page
- * only reads the event log, never writes it.
+ * CHART_DAYS days. Visitors appear as per-browser numbers with approximate
+ * location, IP and network name; nothing names anyone. This page only reads
+ * the event log, never writes it (network names are cached in a separate
+ * file, see lib/networks.ts).
  */
 export default async function VisitsPage({
   searchParams,
@@ -94,6 +97,9 @@ export default async function VisitsPage({
   const peopleFrom = peopleSince(events);
   const cityFrom = citiesSince(events);
   const numbers = visitorNumbers(events);
+  // Network names are looked up (and cached) only for IPs tied to a visitor.
+  const owners = ipOwners(events, numbers);
+  const net = { owners, names: await networkNames(owners.keys()) };
   const sitePeopleByDay = peoplePerDay(site);
   const peopleNote = (n: number) =>
     peopleFrom ? `${n} ${n === 1 ? "person" : "people"} since ${peopleFrom}` : undefined;
@@ -158,7 +164,7 @@ export default async function VisitsPage({
             <CitiesHead since={cityFrom} />
             <BarList rows={perCity(site)} color={SITE.accent} noun="cities" empty={NO_CITIES} />
           </Card>
-          <PeopleCard list={visitors(site, numbers)} peopleFrom={peopleFrom} kind="site" color={SITE.accent} />
+          <PeopleCard list={visitors(site, numbers, net)} peopleFrom={peopleFrom} kind="site" color={SITE.accent} />
         </section>
 
         {/* ── Bio-data page ── */}
@@ -210,7 +216,7 @@ export default async function VisitsPage({
             <CardTitle>Days with activity</CardTitle>
             <ActivityTable bio={bio} />
           </Card>
-          <PeopleCard list={visitors(bio, numbers)} peopleFrom={peopleFrom} kind="bio" color={BIO.accent} />
+          <PeopleCard list={visitors(bio, numbers, net)} peopleFrom={peopleFrom} kind="bio" color={BIO.accent} />
         </section>
       </div>
     </main>
@@ -495,8 +501,8 @@ function CitiesHead({ since }: { since: string | null }) {
 
 /**
  * Returning people for one section: how many came back on another day, how
- * often, and an anonymous per-visitor list. A visitor is a random
- * per-browser code; nothing here names anyone.
+ * often, and a per-visitor list. A visitor is a random per-browser code
+ * with its approximate location, IP and network.
  */
 function PeopleCard({
   list,
@@ -544,12 +550,15 @@ function VisitorTable({ list, kind }: { list: Visitor[]; kind: "site" | "bio" })
       kind="table"
       initial={TABLE_ROWS}
       noun="visitors"
-      className={`w-full border-collapse ${bio ? "min-w-[900px]" : "min-w-[720px]"}`}
+      className={`w-full border-collapse ${bio ? "min-w-[1280px]" : "min-w-[1100px]"}`}
       head={
         <thead className="bg-[#161618]" style={{ color: MUTED }}>
           <tr>
             <th className={th}>Visitor</th>
             <th className={th}>Location</th>
+            <th className={th}>IP</th>
+            <th className={th}>Network</th>
+            <th className={th}>Same network as</th>
             <th className={th}>Days</th>
             <th className={th}>Sessions</th>
             <th className={th}>{bio ? "Visits" : "Views"}</th>
@@ -563,8 +572,18 @@ function VisitorTable({ list, kind }: { list: Visitor[]; kind: "site" | "bio" })
       }
       rows={list.map((v) => (
         <tr key={v.number} className="border-t border-[#26262a]">
-          <td className={`${td} text-white`}>Visitor {v.number}</td>
+          <td className={`${td} whitespace-nowrap text-white`}>Visitor {v.number}</td>
           <td className={td}>{v.location}</td>
+          <td className={`${td} whitespace-nowrap`}>
+            {v.ip ?? "—"}
+            {v.ipCount > 1 && (
+              <span className="ml-1.5 text-[11px]" style={{ color: MUTED }} title="Distinct IPs this visitor used">
+                +{v.ipCount - 1} more
+              </span>
+            )}
+          </td>
+          <td className={td}>{v.network ?? "—"}</td>
+          <td className={td}>{v.sharedWith.length ? v.sharedWith.map((n) => `Visitor ${n}`).join(", ") : "—"}</td>
           <td className={`${td} text-white`}>{v.days}</td>
           <td className={td}>{v.sessions}</td>
           <td className={td}>{v.views}</td>

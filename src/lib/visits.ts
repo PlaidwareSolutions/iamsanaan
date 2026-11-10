@@ -11,7 +11,14 @@ export type TrackEvent = {
   scope?: string | null;
   page?: string | null;
   /** IP-derived location. region/city/postal only on events recorded after they were enabled. */
-  server: { country: string | null; region?: string | null; city?: string | null; postal?: string | null };
+  server: {
+    country: string | null;
+    region?: string | null;
+    city?: string | null;
+    postal?: string | null;
+    /** Visitor IP; only on events recorded after IP capture began. */
+    ip?: string | null;
+  };
 };
 
 /** Time zone the dashboard groups and prints days in (Houston). */
@@ -257,11 +264,38 @@ export function visitorNumbers(events: TrackEvent[]): Map<string, number> {
   return new Map([...first].sort((a, b) => a[1].localeCompare(b[1])).map(([id], i) => [id, i + 1]));
 }
 
-/** One anonymous browser's activity. No name, IP or device — only the random id's number. */
+/**
+ * Which visitors used each IP, across the whole site, so a visitor can be
+ * shown as "same network as Visitor N" in either section.
+ */
+export function ipOwners(events: TrackEvent[], numbers: Map<string, number>): Map<string, Set<number>> {
+  const owners = new Map<string, Set<number>>();
+  for (const e of events) {
+    const ip = e.server?.ip;
+    const n = hasPerson(e) ? numbers.get(e.personId) : undefined;
+    if (!ip || n === undefined) continue;
+    const set = owners.get(ip) ?? new Set<number>();
+    set.add(n);
+    owners.set(ip, set);
+  }
+  return owners;
+}
+
+/** IP-derived context for visitors(): network names and which visitors share each IP. */
+export type NetworkInfo = { names: Map<string, string | null>; owners: Map<string, Set<number>> };
+
+/** One browser's activity: a random id's number, plus its approximate location and IP. */
 export type Visitor = {
   number: number;
   /** Latest known "City, Region" (or country), with postal code when known. */
   location: string;
+  /** Most recent IP, and how many distinct IPs this visitor used. */
+  ip: string | null;
+  ipCount: number;
+  /** ISP or company owning the most recent IP, when known. */
+  network: string | null;
+  /** Other visitors seen on any of this visitor's IPs. */
+  sharedWith: number[];
   days: number;
   sessions: number;
   views: number;
@@ -273,7 +307,7 @@ export type Visitor = {
 };
 
 /** Every person seen in these events, most days first, then most views, then most recent. */
-export function visitors(events: TrackEvent[], numbers: Map<string, number>): Visitor[] {
+export function visitors(events: TrackEvent[], numbers: Map<string, number>, net?: NetworkInfo): Visitor[] {
   const by = new Map<string, TrackEvent[]>();
   for (const e of events) {
     if (!hasPerson(e)) continue;
@@ -290,11 +324,19 @@ export function visitors(events: TrackEvent[], numbers: Map<string, number>): Vi
     const where = located ? (place(located) ?? located.server.country ?? "") : "";
     const count = (event: string) => list.filter((e) => e.event === event).length;
     const last = list[list.length - 1].t;
+    const number = numbers.get(id) ?? 0;
+    const ips = [...new Set(latest.map((e) => e.server?.ip).filter((ip): ip is string => Boolean(ip)))];
+    const shared = new Set<number>();
+    for (const ip of ips) for (const n of net?.owners.get(ip) ?? []) if (n !== number) shared.add(n);
     out.push({
       last,
       v: {
-        number: numbers.get(id) ?? 0,
+        number,
         location: [where, postal].filter(Boolean).join(" ") || "Unknown",
+        ip: ips[0] ?? null,
+        ipCount: ips.length,
+        network: ips[0] ? (net?.names.get(ips[0]) ?? null) : null,
+        sharedWith: [...shared].sort((a, b) => a - b),
         days: new Set(list.map((e) => dayKey(e.t))).size,
         sessions: new Set(list.map((e) => e.visitId)).size,
         views: count("view"),
