@@ -11,7 +11,16 @@ import {
   firstDayKey,
   dailySeries,
   bioFunnel,
+  peopleSince,
+  uniquePeople,
+  peoplePerDay,
+  perCity,
+  citiesSince,
+  visitorNumbers,
+  visitors,
+  returning,
   stamp,
+  type Visitor,
   type CountRow,
   type FunnelStep,
   type SeriesDay,
@@ -34,6 +43,7 @@ const SPARK_DAYS = 14;
 /** Rows shown before "Show all": bar lists (pages, countries) and the activity table. */
 const LIST_ROWS = 5;
 const TABLE_ROWS = 7;
+const NO_CITIES = "No cities yet. They are recorded once Cloudflare's visitor location headers are on.";
 
 const SITE = { accent: "#4a9eff", light: "#8cc2ff", dark: "#2d6cb0", tagBg: "#12243a" };
 const BIO = { accent: "#e0a43a", light: "#f0c06a", tagBg: "#33260f" };
@@ -45,8 +55,9 @@ const EMPTY_BAR = "#2a2a30";
  * the VISITS_KEY env var; otherwise it 404s. Two clearly separated sections,
  * the marketing site (iamsanaan.com) and the private bio-data page, stacked
  * on one page. Totals are all-time; the daily charts cover the last
- * CHART_DAYS days. Aggregate only: country level at most, never a single
- * person. This page only reads the event log, never writes it.
+ * CHART_DAYS days. Visitors appear only as anonymous per-browser numbers
+ * with approximate, IP-derived locations; nothing names anyone. This page
+ * only reads the event log, never writes it.
  */
 export default async function VisitsPage({
   searchParams,
@@ -78,6 +89,15 @@ export default async function VisitsPage({
   const sparkHome = sparkBy(site, spark, (p) => isHome(p));
   const sparkOther = sparkBy(site, spark, (p) => !isHome(p));
 
+  // People (per browser) are only known for events recorded since people
+  // tracking began; every other number stays all-time.
+  const peopleFrom = peopleSince(events);
+  const cityFrom = citiesSince(events);
+  const numbers = visitorNumbers(events);
+  const sitePeopleByDay = peoplePerDay(site);
+  const peopleNote = (n: number) =>
+    peopleFrom ? `${n} ${n === 1 ? "person" : "people"} since ${peopleFrom}` : undefined;
+
   return (
     <main
       style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}
@@ -87,8 +107,11 @@ export default async function VisitsPage({
         <header>
           <h1 className="text-[20px] font-semibold text-white">iamsanaan · visits</h1>
           <p className="mt-1.5" style={{ color: MUTED }}>
-            All time{since ? ` (since ${since})` : ""} · updated {stamp(new Date().toISOString())} (America/Chicago) ·
-            aggregate only
+            All time{since ? ` (since ${since})` : ""} · updated {stamp(new Date().toISOString())} (America/Chicago)
+          </p>
+          <p className="mt-1" style={{ color: MUTED }}>
+            Sessions reset when a tab closes; people are counted per browser
+            {peopleFrom ? `, since ${peopleFrom}` : " from the next visit on"}.
           </p>
         </header>
 
@@ -102,15 +125,21 @@ export default async function VisitsPage({
             tagBg={SITE.tagBg}
             tagColor={SITE.light}
           />
-          <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]">
+          <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(180px,1fr))]">
             <Kpi label="Page views" value={siteTotals.visits} spark={spark.map((d) => d.visits)} />
-            <Kpi label="Unique visitors" value={siteTotals.unique} spark={spark.map((d) => d.unique)} />
+            <Kpi label="Unique sessions" value={siteTotals.unique} spark={spark.map((d) => d.unique)} />
+            <Kpi
+              label="Unique people"
+              value={peopleFrom ? uniquePeople(site, "view") : "—"}
+              spark={spark.map((d) => sitePeopleByDay.get(d.date) ?? 0)}
+              sparkNote={peopleFrom ? `Since ${peopleFrom}` : "Starts with the next visit"}
+            />
             <Kpi label="Homepage views" value={homeViews} spark={sparkHome} />
             <Kpi label="Other pages" value={siteTotals.visits - homeViews} spark={sparkOther} />
           </div>
           <Card>
             <ChartHead title="Page views per day" days={siteDays} max={peak(siteDays)}>
-              <Legend color={SITE.light} label="Unique visitors" />
+              <Legend color={SITE.light} label="Unique sessions" />
               <Legend color={SITE.dark} label="Repeat views" />
             </ChartHead>
             <DayChart days={siteDays} height={220} kind="site" />
@@ -125,6 +154,11 @@ export default async function VisitsPage({
               <BarList rows={withCountryNames(perCountry(site))} color={SITE.accent} noun="countries" />
             </Card>
           </div>
+          <Card>
+            <CitiesHead since={cityFrom} />
+            <BarList rows={perCity(site)} color={SITE.accent} noun="cities" empty={NO_CITIES} />
+          </Card>
+          <PeopleCard list={visitors(site, numbers)} peopleFrom={peopleFrom} kind="site" color={SITE.accent} />
         </section>
 
         {/* ── Bio-data page ── */}
@@ -137,21 +171,26 @@ export default async function VisitsPage({
             tagBg={BIO.tagBg}
             tagColor={BIO.light}
           />
-          <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(160px,1fr))]">
+          <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))]">
             <Kpi label="Visits" value={bioTotals.visits} />
-            <Kpi label="Unique visitors" value={bioTotals.unique} />
-            <Kpi label="“No” attempts" value={bioTotals.no} />
-            <Kpi label="“Yes”" value={bioTotals.yes} />
-            <Kpi label="Photos opened" value={bioTotals.photos} />
+            <Kpi label="Unique sessions" value={bioTotals.unique} />
+            <Kpi
+              label="Unique people"
+              value={peopleFrom ? uniquePeople(bio, "view") : "—"}
+              note={peopleFrom ? `Since ${peopleFrom}` : "Starts with the next visit"}
+            />
+            <Kpi label="“No” attempts" value={bioTotals.no} note={peopleNote(uniquePeople(bio, "no_attempt"))} />
+            <Kpi label="“Yes”" value={bioTotals.yes} note={peopleNote(uniquePeople(bio, "yes"))} />
+            <Kpi label="Photos opened" value={bioTotals.photos} note={peopleNote(uniquePeople(bio, "photos_open"))} />
           </div>
           <Card>
             <div className="flex flex-wrap justify-between gap-2">
               <CardTitle>What visitors did</CardTitle>
               <span className="text-[12px]" style={{ color: MUTED }}>
-                Share of unique visitors
+                Bars: share of sessions, all time
               </span>
             </div>
-            <Funnel steps={bioFunnel(bio)} />
+            <Funnel steps={bioFunnel(bio)} peopleFrom={peopleFrom} />
           </Card>
           <div className="flex flex-wrap gap-4">
             <Card className="min-w-0 flex-[2_1_420px]">
@@ -164,9 +203,14 @@ export default async function VisitsPage({
             </Card>
           </div>
           <Card>
+            <CitiesHead since={cityFrom} />
+            <BarList rows={perCity(bio)} color={BIO.accent} noun="cities" empty={NO_CITIES} />
+          </Card>
+          <Card>
             <CardTitle>Days with activity</CardTitle>
             <ActivityTable bio={bio} />
           </Card>
+          <PeopleCard list={visitors(bio, numbers)} peopleFrom={peopleFrom} kind="bio" color={BIO.accent} />
         </section>
       </div>
     </main>
@@ -248,7 +292,19 @@ function CardTitle({ children }: { children: React.ReactNode }) {
   return <h3 className="text-[14px] font-semibold text-white">{children}</h3>;
 }
 
-function Kpi({ label, value, spark }: { label: string; value: number; spark?: number[] }) {
+function Kpi({
+  label,
+  value,
+  spark,
+  sparkNote = `Last ${SPARK_DAYS} days`,
+  note,
+}: {
+  label: string;
+  value: number | string;
+  spark?: number[];
+  sparkNote?: string;
+  note?: string;
+}) {
   const max = spark ? Math.max(1, ...spark) : 1;
   return (
     <div className="flex min-w-0 flex-col gap-2 rounded-xl border border-[#26262a] bg-[#131315] px-5 py-4">
@@ -271,9 +327,14 @@ function Kpi({ label, value, spark }: { label: string; value: number; spark?: nu
             ))}
           </div>
           <span className="text-[11px]" style={{ color: MUTED }}>
-            Last {SPARK_DAYS} days
+            {sparkNote}
           </span>
         </>
+      )}
+      {note && (
+        <span className="text-[11px]" style={{ color: MUTED }}>
+          {note}
+        </span>
       )}
     </div>
   );
@@ -333,7 +394,7 @@ function DayChart({ days, height, kind }: { days: SeriesDay[]; height: number; k
         {days.map((d) => {
           const tip =
             kind === "site"
-              ? `${d.date}: ${d.visits} views, ${d.unique} unique`
+              ? `${d.date}: ${d.visits} views, ${d.unique} sessions`
               : `${d.date}: ${d.visits} visits, ${d.no} “No”, ${d.yes} “Yes”, ${d.photos} photos`;
           if (!d.visits) {
             return <div key={d.key} title={tip} className="min-w-0 flex-1" style={{ height: 2, backgroundColor: EMPTY_BAR }} />;
@@ -371,16 +432,18 @@ function BarList({
   color,
   noun,
   stacked = false,
+  empty = "No visits recorded yet.",
 }: {
   rows: CountRow[];
   color: string;
   noun: string;
   stacked?: boolean;
+  empty?: string;
 }) {
   if (rows.length === 0) {
-    return <p style={{ color: MUTED }}>No visits recorded yet.</p>;
+    return <p style={{ color: MUTED }}>{empty}</p>;
   }
-  const max = Math.max(1, rows[0].visits);
+  const max = Math.max(1, ...rows.map((r) => r.visits));
   return (
     <Expandable
       kind="list"
@@ -419,25 +482,141 @@ function BarList({
   );
 }
 
-function Funnel({ steps }: { steps: FunnelStep[] }) {
-  const base = steps[0]?.visitors ?? 0;
+function CitiesHead({ since }: { since: string | null }) {
   return (
-    <ul className="flex flex-col gap-2">
-      {steps.map((s) => {
-        const pct = base ? Math.min(100, Math.round((s.visitors / base) * 100)) : 0;
-        return (
-          <li key={s.label} className="grid min-h-8 grid-cols-[minmax(0,170px)_minmax(0,1fr)_96px] items-center gap-3">
-            <span className="text-white">{s.label}</span>
-            <div className="h-[18px] overflow-hidden rounded bg-[#1d1d22]">
-              <div className="h-full rounded" style={{ width: `${Math.max(2, pct)}%`, backgroundColor: BIO.accent }} />
-            </div>
-            <span className="text-right">
-              {s.visitors} · {pct}%
-            </span>
-          </li>
-        );
-      })}
-    </ul>
+    <div className="flex flex-wrap justify-between gap-2">
+      <CardTitle>Top cities</CardTitle>
+      <span className="text-[12px]" style={{ color: MUTED }}>
+        Approximate, from IP{since ? ` · since ${since}` : ""}
+      </span>
+    </div>
+  );
+}
+
+/**
+ * Returning people for one section: how many came back on another day, how
+ * often, and an anonymous per-visitor list. A visitor is a random
+ * per-browser code; nothing here names anyone.
+ */
+function PeopleCard({
+  list,
+  peopleFrom,
+  kind,
+  color,
+}: {
+  list: Visitor[];
+  peopleFrom: string | null;
+  kind: "site" | "bio";
+  color: string;
+}) {
+  const r = returning(list);
+  return (
+    <Card>
+      <div className="flex flex-wrap justify-between gap-2">
+        <CardTitle>Returning people</CardTitle>
+        <span className="text-[12px]" style={{ color: MUTED }}>
+          {peopleFrom ? `Per browser · since ${peopleFrom}` : "Per browser · starts with the next visit"}
+        </span>
+      </div>
+      {list.length === 0 ? (
+        <p style={{ color: MUTED }}>No people recorded yet.</p>
+      ) : (
+        <>
+          <p>
+            <span className="text-[22px] font-semibold text-white">{r.returning}</span>{" "}
+            of {r.people} {r.people === 1 ? "person" : "people"} came back on another day
+          </p>
+          <div className="max-w-[560px]">
+            <BarList rows={r.buckets} color={color} noun="groups" />
+          </div>
+          <h4 className="mt-2 text-[13px] font-semibold text-white">Visitors, most days first</h4>
+          <VisitorTable list={list} kind={kind} />
+        </>
+      )}
+    </Card>
+  );
+}
+
+function VisitorTable({ list, kind }: { list: Visitor[]; kind: "site" | "bio" }) {
+  const bio = kind === "bio";
+  return (
+    <Expandable
+      kind="table"
+      initial={TABLE_ROWS}
+      noun="visitors"
+      className={`w-full border-collapse ${bio ? "min-w-[900px]" : "min-w-[720px]"}`}
+      head={
+        <thead className="bg-[#161618]" style={{ color: MUTED }}>
+          <tr>
+            <th className={th}>Visitor</th>
+            <th className={th}>Location</th>
+            <th className={th}>Days</th>
+            <th className={th}>Sessions</th>
+            <th className={th}>{bio ? "Visits" : "Views"}</th>
+            {bio && <th className={th}>Photos</th>}
+            {bio && <th className={th}>“No”</th>}
+            {bio && <th className={th}>“Yes”</th>}
+            <th className={th}>First seen</th>
+            <th className={th}>Last seen</th>
+          </tr>
+        </thead>
+      }
+      rows={list.map((v) => (
+        <tr key={v.number} className="border-t border-[#26262a]">
+          <td className={`${td} text-white`}>Visitor {v.number}</td>
+          <td className={td}>{v.location}</td>
+          <td className={`${td} text-white`}>{v.days}</td>
+          <td className={td}>{v.sessions}</td>
+          <td className={td}>{v.views}</td>
+          {bio && <td className={td}>{v.photos}</td>}
+          {bio && <td className={td}>{v.no}</td>}
+          {bio && <td className={td}>{v.yes}</td>}
+          <td className={td}>{v.firstSeen}</td>
+          <td className={`${td} whitespace-nowrap`}>{v.lastSeen}</td>
+        </tr>
+      ))}
+    />
+  );
+}
+
+function Funnel({ steps, peopleFrom }: { steps: FunnelStep[]; peopleFrom: string | null }) {
+  const base = steps[0]?.visitors ?? 0;
+  const cols = "grid grid-cols-[minmax(0,150px)_minmax(0,1fr)_96px_72px] items-center gap-3";
+  return (
+    <div className="overflow-x-auto">
+      <div className="min-w-[520px]">
+        <div className={`${cols} pb-1 text-[11px]`} style={{ color: MUTED }}>
+          <span />
+          <span />
+          <span className="text-right">Sessions</span>
+          <span className="text-right" title={peopleFrom ? `Since ${peopleFrom}` : undefined}>
+            People{peopleFrom ? "*" : ""}
+          </span>
+        </div>
+        <ul className="flex flex-col gap-2">
+          {steps.map((s) => {
+            const pct = base ? Math.min(100, Math.round((s.visitors / base) * 100)) : 0;
+            return (
+              <li key={s.label} className={`${cols} min-h-8`}>
+                <span className="text-white">{s.label}</span>
+                <div className="h-[18px] overflow-hidden rounded bg-[#1d1d22]">
+                  <div className="h-full rounded" style={{ width: `${Math.max(2, pct)}%`, backgroundColor: BIO.accent }} />
+                </div>
+                <span className="text-right">
+                  {s.visitors} · {pct}%
+                </span>
+                <span className="text-right text-white">{peopleFrom ? s.people : "—"}</span>
+              </li>
+            );
+          })}
+        </ul>
+        {peopleFrom && (
+          <p className="mt-2 text-[11px]" style={{ color: MUTED }}>
+            * People since {peopleFrom}, when per-browser counting began.
+          </p>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -447,6 +626,7 @@ const td = "px-3 py-2";
 /** Every day the bio-data page saw activity, newest first — the full per-day detail. */
 function ActivityTable({ bio }: { bio: TrackEvent[] }) {
   const rows = perDay(bio);
+  const people = peoplePerDay(bio);
   if (rows.length === 0) {
     return <p style={{ color: MUTED }}>No visits recorded yet.</p>;
   }
@@ -455,13 +635,14 @@ function ActivityTable({ bio }: { bio: TrackEvent[] }) {
       kind="table"
       initial={TABLE_ROWS}
       noun="days"
-      className="w-full min-w-[520px] border-collapse"
+      className="w-full min-w-[600px] border-collapse"
       head={
         <thead className="bg-[#161618]" style={{ color: MUTED }}>
           <tr>
             <th className={th}>Date</th>
             <th className={th}>Visits</th>
-            <th className={th}>Unique</th>
+            <th className={th}>Sessions</th>
+            <th className={th}>People</th>
             <th className={th}>“No”</th>
             <th className={th}>“Yes”</th>
             <th className={th}>Photos</th>
@@ -473,6 +654,7 @@ function ActivityTable({ bio }: { bio: TrackEvent[] }) {
           <td className={`${td} text-white`}>{r.date}</td>
           <td className={td}>{r.visits}</td>
           <td className={td}>{r.unique}</td>
+          <td className={td}>{people.get(r.date) ?? "—"}</td>
           <td className={td}>{r.no}</td>
           <td className={td}>{r.yes}</td>
           <td className={td}>{r.photos}</td>

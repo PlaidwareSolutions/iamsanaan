@@ -5,6 +5,15 @@ import { eventsFile } from "@/lib/visits";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/** A random UUID, or the digits-only fallback when randomUUID is missing. */
+const PERSON_ID = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|\d{6,20})$/i;
+
+/** Trimmed, length-capped header value; null when empty. */
+function clean(v: string | null): string | null {
+  const s = v?.trim().slice(0, 80);
+  return s ? s : null;
+}
+
 /** First present header value among the given names. */
 function pick(h: Headers, ...names: string[]): string | null {
   for (const n of names) {
@@ -24,6 +33,7 @@ export async function POST(req: Request) {
   let body: {
     event?: string;
     visitId?: string | null;
+    personId?: string | null;
     scope?: string | null;
     page?: string | null;
   } = {};
@@ -35,12 +45,15 @@ export async function POST(req: Request) {
 
   const h = req.headers;
 
-  // Country only. No city, no coordinates, no raw IP, no per-person link
-  // code — this dashboard is aggregate by design and stores nothing finer.
+  // Location is approximate and IP-derived: country, region, city, postal
+  // code. No coordinates, no raw IP, no per-person link code. personId is the
+  // tracker's random per-browser code (see lib/track.ts), kept only when it
+  // has that shape, so nothing else can be smuggled in.
   const record = {
     t: new Date().toISOString(),
     event: body.event ?? "unknown",
     visitId: body.visitId ?? null,
+    personId: typeof body.personId === "string" && PERSON_ID.test(body.personId) ? body.personId : null,
     // "site" = marketing pages, "bio" = the bio-data page. Kept separate so
     // the dashboard never conflates the two.
     scope: body.scope === "site" ? "site" : "bio",
@@ -48,6 +61,11 @@ export async function POST(req: Request) {
     page: body.scope === "site" && typeof body.page === "string" ? body.page : null,
     server: {
       country: pick(h, "cf-ipcountry", "x-vercel-ip-country"),
+      // Approximate, IP-based, from Cloudflare's "Add visitor location
+      // headers" managed transform. Null when that is off or unknown.
+      region: clean(pick(h, "cf-region-code", "cf-region")),
+      city: clean(pick(h, "cf-ipcity")),
+      postal: clean(pick(h, "cf-postal-code")),
     },
   };
 
